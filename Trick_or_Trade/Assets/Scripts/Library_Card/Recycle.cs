@@ -3,7 +3,10 @@ using UnityEngine;
 
 public class CarteDeJeu : GenerationCarte
 {
-
+    void Start()
+    {
+        CreerLaCarte();
+    }
     override public void CreerLaCarte()
     {
         Debug.Log("I'm Working");
