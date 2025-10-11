@@ -3,18 +3,20 @@ using UnityEngine;
 
 public class carte_de_jeu : MonoBehaviour
 {
+  
     public string nom_Carte = "Carte Inconnue";
-    public int valeur_Carte = 0;
+    public string valeur_Carte = "non-existant";
     public string description_Carte = "Aucune description";
     
-    public void Start()
+  public void Start()
+{
+    GameObject[] cartes = GameObject.FindGameObjectsWithTag("Carte");
+
+    foreach (GameObject carte in cartes)
     {
-        afficher_carte();
+        TextMeshPro tmp = carte.GetComponent<TextMeshPro>();
+        tmp.text = "name : "  + nom_Carte + " value : " + valeur_Carte + " description : " + description_Carte;
     }
-    public void afficher_carte()
-    {
-       
-        GetComponent<TextMeshPro>().text =  nom_Carte + "\n" + valeur_Carte + "\n" + description_Carte;
-    }
+}
 
 }
