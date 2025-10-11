@@ -16,7 +16,7 @@ public class GenerationCarte : MonoBehaviour
 
 
         //foreach (GameObject carte in cartes)
-        TextMeshPro tmp = gameObject.GetComponent<TextMeshPro>();
+        TextMeshPro tmp = gameObject.transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshPro>();
         tmp.text = "name : " + nom_Carte + "\n" + "\n" + "description : " + description_Carte;
     }
 }
