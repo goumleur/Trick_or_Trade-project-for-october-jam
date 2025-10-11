@@ -15,7 +15,7 @@ public class carte_de_jeu : MonoBehaviour
     foreach (GameObject carte in cartes)
     {
         TextMeshPro tmp = carte.GetComponent<TextMeshPro>();
-        tmp.text = "name : "  + nom_Carte + " value : " + valeur_Carte + " description : " + description_Carte;
+        tmp.text = "name : "  + nom_Carte + "\n" + "\n" + "\n" + "description : " + description_Carte;
     }
 }
 
