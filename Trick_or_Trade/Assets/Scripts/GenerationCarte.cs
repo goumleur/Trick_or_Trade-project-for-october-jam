@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class GenerationCarte : MonoBehaviour
 {
@@ -6,11 +7,16 @@ public class GenerationCarte : MonoBehaviour
     protected string nom_Carte = "Carte Inconnue";
     protected string description_Carte = "Aucune description";
 
-    public virtual void CreerLaCarte() {}
+    public virtual void CreerLaCarte() { }
     protected void afficher_carte()
     {
-        GetComponent<TextMeshPro>().text = nom_Carte + "\n" + description_Carte;
+        GameObject[] cartes = GameObject.FindGameObjectsWithTag("Carte");
+
+        foreach (GameObject carte in cartes)
+        {
+            TextMeshPro tmp = carte.GetComponent<TextMeshPro>();
+            tmp.text = "name : " + nom_Carte + "\n" + "\n" + "description : " + description_Carte;
+
+        }
     }
-    
-    
 }
