@@ -1,4 +1,7 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class Settings : MonoBehaviour
 {
@@ -58,9 +61,24 @@ public class Settings : MonoBehaviour
             Debug.LogError("Error, the Resolution Button has an error");
             return;
         }
+        Debug.Log("Résolution : " + resolution);
         Debug.Log($"The resolution is : {resolution}");
         Debug.Log($"Weidth = {Screen.width}");
         Debug.Log($"Height = {Screen.height}");
         Debug.Log($"Full Screen = {Screen.fullScreen}");
+        GameObject objetText = GameObject.Find("Canvas");
+        TextMeshProUGUI texte = objetText.transform.GetChild(1).transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+        Debug.Log(objetText.transform.GetChild(1).transform.GetChild(1).name);
+        
+        texte.text = $"Résolution : {resolution} \n Weidth = {Screen.width} \n Height = {Screen.height} \n Full Screen = {Screen.fullScreen}";
+    }
+
+
+    // Son
+
+    // Son musique
+    public void SetSonJeu()
+    {
+        
     }
 }
