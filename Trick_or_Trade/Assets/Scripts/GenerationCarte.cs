@@ -1,22 +1,24 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class GenerationCarte : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    protected string nom_Carte = "Carte Inconnue";
-    protected string description_Carte = "Aucune description";
+   [SerializeField] protected string nom_Carte = "Carte Inconnue";
+   [SerializeField] protected string description_Carte = "Aucune description";
+   [SerializeField] protected Sprite image_Carte = null;
+
     public virtual void CreerLaCarte() { }
-    protected void afficher_carte()
+   [SerializeField] protected void afficher_carte()
     {
-        //GameObject[] cartes = GameObject.FindGameObjectsWithTag("Carte");
-
+        Image img = gameObject.transform.GetChild(1).GetComponent<Image>();
+        img.sprite = image_Carte;
         Debug.Log("Ce script est attaché à : " + gameObject.name);
-
-
-
-        //foreach (GameObject carte in cartes)
         TextMeshPro tmp = gameObject.transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshPro>();
-        tmp.text = "name : " + nom_Carte + "\n" + "\n" + "description : " + description_Carte;
+        tmp.text = "name : " + nom_Carte + "\n" + "\n";
+        TextMeshPro t1 = gameObject.transform.GetChild(0).transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshPro>();
+        t1.text =  "description : " + description_Carte;
+
     }
 }
