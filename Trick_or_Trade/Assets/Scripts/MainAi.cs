@@ -4,7 +4,7 @@ using TMPro;
 using Unity.VisualScripting;
 using System.Linq;
 
-public class main_joueur : MonoBehaviour
+public class MainAi : MonoBehaviour
 {
     //private List<GameObject> cartesDisponibles = new List<GameObject>(); 
     private Dictionary<int, GameObject> cartesDisponibles = new Dictionary<int, GameObject>(); // Le "deck" complet (1 à 40)
@@ -27,9 +27,9 @@ public class main_joueur : MonoBehaviour
         for (int i = 0; i < 40; i++)
         {
             GameObject carteModel = GameObject.Find("CarteModel"); // Trouver le model de carte
-            Transform parent = GameObject.Find("Deck").transform; // Trouver le deck pour le futur enfant
+            Transform parent = GameObject.Find("DeckIA").transform; // Trouver le deck pour le futur enfant
             GameObject carteClone = Instantiate(carteModel, parent, true); // cloner le model & set le parent de la carte (a deck)
-            carteClone.name = i.ToString(); // Set le nom au numéro de génération
+            carteClone.name = (i+40).ToString(); // Set le nom au numéro de génération
             cartesDisponibles.Add(i, carteClone); // Ajouter la carte dans le dictionnaire
         }
         Debug.Log("Deck initialisé avec " + cartesDisponibles.Count + " cartes.");
@@ -55,7 +55,7 @@ public class main_joueur : MonoBehaviour
             //Debug.Log($"La carte avec la clé : {carteDictionnaire.Key}"); // Afficher la carte piocher
             cartesDisponibles.Remove(carteDictionnaire.Key); // Enleve la clé du dictionnaire
             cartesMain.Add(carte);
-            GameObject parent = GameObject.Find("main"); // Chercher l'objet main
+            GameObject parent = GameObject.Find("IAHand"); // Chercher l'objet main
             carte.transform.SetParent(parent.transform, worldPositionStays: true); // Set le parent de la carte a main
 
 
@@ -80,21 +80,19 @@ public class main_joueur : MonoBehaviour
         //Debug.Log($"La carte avec la clé : {carteDictionnaire.Key}"); // Afficher la carte piocher
         cartesDisponibles.Remove(carteDictionnaire.Key); // Enleve la clé du dictionnaire
         cartesMain.Add(carte);
-        GameObject parent = GameObject.Find("main"); // Chercher l'objet main
+        GameObject parent = GameObject.Find("IAHand"); // Chercher l'objet main
         carte.transform.SetParent(parent.transform, worldPositionStays: true);// Set le parent de la carte a main
         OrganiserLaMain();
     }
-
     public void PrendreCarte(GameObject carte)
     {
         cartesMain.Add(carte);
-        GameObject parent = GameObject.Find("main"); // Chercher l'objet main
+        GameObject parent = GameObject.Find("IAHand"); // Chercher l'objet main
         carte.transform.SetParent(parent.transform, worldPositionStays: true);
-        GameObject.Find("IAHand").GetComponent<MainAi>().cartesMain.Remove(carte);
-        GameObject.Find("IAHand").GetComponent<MainAi>().OrganiserLaMain();
-        Invoke("OrganiserLaMain", 0.1f); // Appeller la fonction pour organiser la main a 0,1 sec apres pour éviter les erreur
+        GameObject.Find("Main Camera").GetComponent<main_joueur>().cartesMain.Remove(carte);
+        GameObject.Find("Main Camera").GetComponent<main_joueur>().OrganiserLaMain();
+        OrganiserLaMain(); // Appeller la fonction pour organiser la main a 0,1 sec apres pour éviter les erreur
     }
-
     public void OrganiserLaMain()
     {
 
@@ -108,7 +106,7 @@ public class main_joueur : MonoBehaviour
             {
                 float angle = -angleTotal / 2 + i * angleParCarte; // Met l'angle de la carte
                 float rad = -angle * Mathf.Deg2Rad; // Le fait que les carte sont mis en cercle
-                Vector3 pos = new Vector3(Mathf.Sin(rad) * rayon, Mathf.Cos(rad) * rayon, i * 10); // Calculer la position de la carte
+                Vector3 pos = new Vector3(Mathf.Sin(rad) * rayon, Mathf.Cos(-rad) * rayon, i * 10); // Calculer la position de la carte
                 cartesMain[i].transform.localPosition = pos; // Mettre la carte en position
                 cartesMain[i].transform.localRotation = Quaternion.Euler(0f, 0f, angle); // set l'angle de la carte
 
