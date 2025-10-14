@@ -3,21 +3,22 @@ using System.Collections.Generic; // pour utiliser List<>
 using TMPro;
 using Unity.VisualScripting;
 using System.Linq;
+using UnityEngine.UIElements;
 
 public class main_joueur : MonoBehaviour
 {
     //private List<GameObject> cartesDisponibles = new List<GameObject>(); 
-    private Dictionary<int, GameObject> cartesDisponibles = new Dictionary<int, GameObject>(); // Le "deck" complet (1 à 40)
+    private List<GameObject> cartesDisponibles = new List<GameObject>(); // Le "deck" complet (1 à 40)
     public List<GameObject> cartesMain = new List<GameObject>(); // Les cartes actuellement en main
-    public GameObject carte;
     public Transform zoneMain;
 
 
     void Start()
     {
-        
+
         InitialiserDeck();
-        PigerMainDeDepart(); // Le joueur pioche 8 cartes au début
+        GameObject.Find("Deck").GetComponent<deck_joueur>().melanger_deck();
+        Invoke("PigerMainDeDepart", 0.01f);
     }
 
     //  Remplit le deck avec toutes les cartes possibles
@@ -30,7 +31,7 @@ public class main_joueur : MonoBehaviour
             Transform parent = GameObject.Find("Deck").transform; // Trouver le deck pour le futur enfant
             GameObject carteClone = Instantiate(carteModel, parent, true); // cloner le model & set le parent de la carte (a deck)
             carteClone.name = i.ToString(); // Set le nom au numéro de génération
-            cartesDisponibles.Add(i, carteClone); // Ajouter la carte dans le dictionnaire
+            cartesDisponibles.Add(carteClone); // Ajouter la carte dans la liste
         }
         Debug.Log("Deck initialisé avec " + cartesDisponibles.Count + " cartes.");
     }
@@ -47,13 +48,8 @@ public class main_joueur : MonoBehaviour
                 Debug.LogWarning("Le deck est vide !");
                 return;
             }
-
-            var liste = cartesDisponibles.ToList(); // Transformer le dictionnaire en list
-            int indexAleatoire = Random.Range(0, liste.Count); // Chercher un nombre aléatoire dans la liste
-            var carteDictionnaire = liste[indexAleatoire]; // Prendre la valeur de la liste
-            GameObject carte = carteDictionnaire.Value; // Prendre le model de carte dans le dictionnaire
-            //Debug.Log($"La carte avec la clé : {carteDictionnaire.Key}"); // Afficher la carte piocher
-            cartesDisponibles.Remove(carteDictionnaire.Key); // Enleve la clé du dictionnaire
+            GameObject carte = GameObject.Find("Deck").transform.GetChild(0).gameObject;
+            cartesDisponibles.Remove(carte); // Enleve dans la list
             cartesMain.Add(carte);
             GameObject parent = GameObject.Find("main"); // Chercher l'objet main
             carte.transform.SetParent(parent.transform, worldPositionStays: true); // Set le parent de la carte a main
@@ -73,18 +69,18 @@ public class main_joueur : MonoBehaviour
             InitialiserDeck();
         }
 
-        var liste = cartesDisponibles.ToList(); // Transformer le dictionnaire en list
-        int indexAleatoire = Random.Range(0, liste.Count); // Chercher un nombre aléatoire dans la liste
-        var carteDictionnaire = liste[indexAleatoire]; // Prendre la valeur de la liste
-        GameObject carte = carteDictionnaire.Value; // Prendre le model de carte dans le dictionnaire
-        //Debug.Log($"La carte avec la clé : {carteDictionnaire.Key}"); // Afficher la carte piocher
-        cartesDisponibles.Remove(carteDictionnaire.Key); // Enleve la clé du dictionnaire
+        GameObject carte = GameObject.Find("Deck").transform.GetChild(0).gameObject;
+        cartesDisponibles.Remove(carte); // Enleve dans la list
         cartesMain.Add(carte);
         GameObject parent = GameObject.Find("main"); // Chercher l'objet main
-        carte.transform.SetParent(parent.transform, worldPositionStays: true);// Set le parent de la carte a main
+        carte.transform.SetParent(parent.transform, worldPositionStays: true); // Set le parent de la carte a main
         OrganiserLaMain();
     }
-
+    public void DiscardFait(GameObject card)
+    {
+        cartesMain.Remove(card);
+        OrganiserLaMain();
+    }
     public void PrendreCarte(GameObject carte)
     {
         cartesMain.Add(carte);
@@ -94,7 +90,19 @@ public class main_joueur : MonoBehaviour
         GameObject.Find("IAHand").GetComponent<MainAi>().OrganiserLaMain();
         Invoke("OrganiserLaMain", 0.1f); // Appeller la fonction pour organiser la main a 0,1 sec apres pour éviter les erreur
     }
-
+    public void DetruireCarte(GameObject carte)
+    {
+        cartesMain.Remove(carte);
+        Destroy(carte);
+        OrganiserLaMain();
+    }
+    public void SauverCarte(GameObject cartesASauver)
+    {
+        cartesMain.Add(cartesASauver);
+        GameObject parent = GameObject.Find("main"); // Chercher l'objet main
+        cartesASauver.transform.SetParent(parent.transform, worldPositionStays: true);
+        Invoke("OrganiserLaMain", 0.1f); // Appeller la fonction pour organiser la main a 0,1 sec apres pour éviter les erreur
+    }
     public void OrganiserLaMain()
     {
 

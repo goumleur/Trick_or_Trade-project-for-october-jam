@@ -93,6 +93,12 @@ public class MainAi : MonoBehaviour
         GameObject.Find("Main Camera").GetComponent<main_joueur>().OrganiserLaMain();
         OrganiserLaMain(); // Appeller la fonction pour organiser la main a 0,1 sec apres pour éviter les erreur
     }
+    public void DetruireCarte(GameObject carte)
+    {
+        cartesMain.Remove(carte);
+        Destroy(carte);
+        OrganiserLaMain();
+    }
     public void OrganiserLaMain()
     {
 

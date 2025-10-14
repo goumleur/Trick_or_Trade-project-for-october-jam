@@ -1,7 +1,5 @@
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 
 public class GenerationCarte : MonoBehaviour
@@ -27,16 +25,6 @@ public class GenerationCarte : MonoBehaviour
         t1.text = "description : " + description_Carte;
         
     }
-
-    protected void discardCard()
-    {
-        Debug.Log("Début");
-        Transform cFrameCarte = gameObject.GetComponent<Transform>();
-        GameObject discardPile = GameObject.Find("DiscardPile");
-        Transform cFrameDiscardPile = discardPile.GetComponent<Transform>();
-        cFrameCarte.transform.SetPositionAndRotation(cFrameDiscardPile.transform.position, Quaternion.Euler(0f, 90f, 0f));
-    }
-
     protected void VolerCarteAdvairsaire(GameObject carteViser)
     {
         EnleverCarteZoom();
@@ -50,6 +38,17 @@ public class GenerationCarte : MonoBehaviour
             GameObject.Find("IAHand").GetComponent<MainAi>().PrendreCarte(carteViser);
         }
         TrouverAdvairsaire();
+    }
+    protected void DetruireCarteAdvairsaire(GameObject carteViser)
+    {
+        if (advairsaire == "main")
+        {
+            GameObject.Find("IAHand").GetComponent<MainAi>().DetruireCarte(carteViser);
+        }
+        else if (advairsaire == "IAHand")
+        {
+            GameObject.Find("Main Camera").GetComponent<main_joueur>().DetruireCarte(carteViser);
+        }
     }
     protected void AfficherCarteZoom()
     {
