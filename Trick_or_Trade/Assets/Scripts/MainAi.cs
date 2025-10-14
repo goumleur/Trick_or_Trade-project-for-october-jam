@@ -13,13 +13,13 @@ public class MainAi : MonoBehaviour
     public Transform zoneMain; public SpriteRenderer spriteRenderer; // Assurez-vous d'assigner ce champ dans l'éditeur Unity
     public Sprite nouveauSprite; // Le nouveau sprite à afficher
     public Sprite ImageFacedown; // Le sprite à afficher face cachée (si nécessaire)
-  
 
 
 
 
     void Start()
     {
+        
         InitialiserDeck();
         PigerMainDeDepart(); // Le joueur pioche 8 cartes au début
     }
@@ -33,7 +33,7 @@ public class MainAi : MonoBehaviour
             GameObject carteModel = GameObject.Find("CarteModel"); // Trouver le model de carte
             Transform parent = GameObject.Find("DeckIA").transform; // Trouver le deck pour le futur enfant
             GameObject carteClone = Instantiate(carteModel, parent, true); // cloner le model & set le parent de la carte (a deck)
-            carteClone.name = (i + 40).ToString(); // Set le nom au numéro de génération
+            carteClone.name = (i+40).ToString(); // Set le nom au numéro de génération
             cartesDisponibles.Add(i, carteClone); // Ajouter la carte dans le dictionnaire
         }
         Debug.Log("Deck initialisé avec " + cartesDisponibles.Count + " cartes.");
@@ -107,7 +107,6 @@ public class MainAi : MonoBehaviour
     }
     public void OrganiserLaMain()
     {
-        
 
         float angleTotal = 30f;
         float angleParCarte = angleTotal / (cartesMain.Count - 1);
@@ -130,24 +129,12 @@ public class MainAi : MonoBehaviour
                 cartesMain[i].transform.GetChild(0).transform.GetChild(0).GetComponent<Renderer>().sortingOrder = 101 - 2 * i;
                 cartesMain[i].transform.GetChild(0).transform.GetChild(0).transform.GetChild(0).GetComponent<Renderer>().sortingOrder = 100 - 2 * i;
                 cartesMain[i].GetComponent<SpriteRenderer>().sprite = ImageFacedown;
-                cartesMain[i].GetComponent<GenerationCarte>().afficher_carte();
-               TextMeshPro t1 = cartesMain[i].transform.GetChild(0).transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshPro>();
-                 TextMeshPro TMP = cartesMain[i].transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshPro>();
-                t1.text = "";
-                TMP.text = "";
-                
             }
             else
             {
                 cartesMain[i].transform.localPosition = new Vector2(0f, 10f); // Mettre la carte en position
                 cartesMain[i].transform.localRotation = Quaternion.Euler(0f, 0f, 0f); // set l'angle de la carte
                 cartesMain[i].GetComponent<SpriteRenderer>().sprite = ImageFacedown;
-                cartesMain[i].GetComponent<GenerationCarte>().afficher_carte();
-                TextMeshPro t1 = cartesMain[i].transform.GetChild(0).transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshPro>();
-                t1.text = "";
-                TextMeshPro TMP = cartesMain[i].transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshPro>();
-                TMP.text = "";
-
             }
         }
 
