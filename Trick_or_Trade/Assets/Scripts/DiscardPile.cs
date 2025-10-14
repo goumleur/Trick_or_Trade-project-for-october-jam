@@ -12,16 +12,13 @@ public class DiscardPile : MonoBehaviour
 
     public void CarteASauver(GameObject carte)
     {
-        carteASauver = carte;
         Invoke("PutDiscardCard", 0.01f);
     }
     public void discardCard(GameObject carte)
     {
         Debug.Log("Début");
-        Transform cFrameCarte = carte.GetComponent<Transform>();
-        GameObject discardPile = GameObject.Find("DiscardPile");
-        Transform cFrameDiscardPile = discardPile.GetComponent<Transform>();
-        cFrameCarte.transform.SetPositionAndRotation(cFrameDiscardPile.transform.position, Quaternion.Euler(0f, 90f, 0f));
+        carte.transform.localPosition = new Vector3(0f, 0f, 0f);
+        carte.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
         carte.transform.localScale = new Vector3(1f, 1f, 1f);
         carte.transform.SetParent(GameObject.Find("DiscardPile").transform, false);
         GameObject.Find("Main Camera").GetComponent<main_joueur>().DiscardFait(carte);

@@ -10,6 +10,8 @@ public class deck_joueur : MonoBehaviour
     Vector3 oldScale;
     Vector3 oldPosition;
     Vector3 oldAngle;
+
+    bool regarder = false;
     public void test()
     {
         VoirCarteDessus(5);
@@ -42,12 +44,15 @@ public class deck_joueur : MonoBehaviour
 
     public void ChercherCarte(GameObject carte)
     {
-        carteAChercher = carte;
-        Invoke("PutDiscardCard", 0.01f);
-
+        if(regarder == false)
+        {
+            carteAChercher = carte;
+            Invoke("PutDiscardCard", 0.01f);
+        }
     }
     public void GetDeckCard()
     {
+        regarder = false;
         main = GameObject.Find("main");
         List<Transform> enfants = new List<Transform>();
 
@@ -87,6 +92,7 @@ public class deck_joueur : MonoBehaviour
 
     public void VoirCarteDessus(int nombreCarteAVoir)
     {
+        regarder = true;
         main = GameObject.Find("main");
         List<Transform> carteAVoir = new List<Transform>();
 

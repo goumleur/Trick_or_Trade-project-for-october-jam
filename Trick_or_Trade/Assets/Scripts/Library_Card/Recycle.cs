@@ -9,6 +9,7 @@ public class CarteDeJeu : GenerationCarte, IPointerEnterHandler, IPointerExitHan
 {
     public bool vaVoler = false;
     public bool vaDetruire = false;
+    public bool regarder = false;
     bool discarded = false;
     void Start()
     {
@@ -83,9 +84,11 @@ public class CarteDeJeu : GenerationCarte, IPointerEnterHandler, IPointerExitHan
             DetruireCarteAdvairsaire(gameObject);
             GameObject.Find("CarteModel").GetComponent<CarteDeJeu>().vaDetruire = false;
         }
-        else if (discarded == false)
+        else if (discarded == false && gameObject.transform.parent.name != "IAHand" && GameObject.Find("DiscardPile").transform.childCount > 0)
         {
-            //discard();
+            GameObject.Find("DiscardPile").GetComponent<DiscardPile>().GetDicardCard();
+            discard();
+            
         }
     }
 }
