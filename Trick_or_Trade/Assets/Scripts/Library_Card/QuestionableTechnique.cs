@@ -76,7 +76,7 @@ public class QuestionableTechnique : GenerationCarte, IPointerEnterHandler, IPoi
             DetruireCarteAdvairsaire(gameObject);
             GameObject.Find("CarteModel").GetComponent<CarteDeJeu>().vaDetruire = false;
         }
-        else if (discarded == false)
+        else if (discarded == false && gameObject.transform.parent.name != "IAHand" && GameObject.Find("DiscardPile").transform.childCount > 0)
         {
             //discard();
         }
