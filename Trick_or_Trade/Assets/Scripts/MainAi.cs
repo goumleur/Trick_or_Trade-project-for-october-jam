@@ -10,12 +10,16 @@ public class MainAi : MonoBehaviour
     private Dictionary<int, GameObject> cartesDisponibles = new Dictionary<int, GameObject>(); // Le "deck" complet (1 à 40)
     public List<GameObject> cartesMain = new List<GameObject>(); // Les cartes actuellement en main
     public GameObject carte;
-    public Transform zoneMain;
+    public Transform zoneMain; public SpriteRenderer spriteRenderer; // Assurez-vous d'assigner ce champ dans l'éditeur Unity
+    public Sprite nouveauSprite; // Le nouveau sprite à afficher
+    public Sprite ImageFacedown; // Le sprite à afficher face cachée (si nécessaire)
+  
+
+
 
 
     void Start()
     {
-        
         InitialiserDeck();
         PigerMainDeDepart(); // Le joueur pioche 8 cartes au début
     }
@@ -29,10 +33,11 @@ public class MainAi : MonoBehaviour
             GameObject carteModel = GameObject.Find("CarteModel"); // Trouver le model de carte
             Transform parent = GameObject.Find("DeckIA").transform; // Trouver le deck pour le futur enfant
             GameObject carteClone = Instantiate(carteModel, parent, true); // cloner le model & set le parent de la carte (a deck)
-            carteClone.name = (i+40).ToString(); // Set le nom au numéro de génération
+            carteClone.name = (i + 40).ToString(); // Set le nom au numéro de génération
             cartesDisponibles.Add(i, carteClone); // Ajouter la carte dans le dictionnaire
         }
         Debug.Log("Deck initialisé avec " + cartesDisponibles.Count + " cartes.");
+        gameObject.GetComponent<MainAi>().spriteChanger();
     }
 
     //  Pioche 8 cartes différentes au début du round
@@ -92,6 +97,7 @@ public class MainAi : MonoBehaviour
         GameObject.Find("Main Camera").GetComponent<main_joueur>().cartesMain.Remove(carte);
         GameObject.Find("Main Camera").GetComponent<main_joueur>().OrganiserLaMain();
         OrganiserLaMain(); // Appeller la fonction pour organiser la main a 0,1 sec apres pour éviter les erreur
+
     }
     public void DetruireCarte(GameObject carte)
     {
@@ -101,6 +107,7 @@ public class MainAi : MonoBehaviour
     }
     public void OrganiserLaMain()
     {
+        
 
         float angleTotal = 30f;
         float angleParCarte = angleTotal / (cartesMain.Count - 1);
@@ -122,14 +129,38 @@ public class MainAi : MonoBehaviour
                 cartesMain[i].transform.GetChild(1).GetComponent<SpriteRenderer>().sortingOrder = 100 - 2 * i;
                 cartesMain[i].transform.GetChild(0).transform.GetChild(0).GetComponent<Renderer>().sortingOrder = 101 - 2 * i;
                 cartesMain[i].transform.GetChild(0).transform.GetChild(0).transform.GetChild(0).GetComponent<Renderer>().sortingOrder = 100 - 2 * i;
+                cartesMain[i].GetComponent<SpriteRenderer>().sprite = ImageFacedown;
+                cartesMain[i].GetComponent<GenerationCarte>().afficher_carte();
+               TextMeshPro t1 = cartesMain[i].transform.GetChild(0).transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshPro>();
+                 TextMeshPro TMP = cartesMain[i].transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshPro>();
+                t1.text = "";
+                TMP.text = "";
+                
             }
             else
             {
                 cartesMain[i].transform.localPosition = new Vector2(0f, 10f); // Mettre la carte en position
                 cartesMain[i].transform.localRotation = Quaternion.Euler(0f, 0f, 0f); // set l'angle de la carte
+                cartesMain[i].GetComponent<SpriteRenderer>().sprite = ImageFacedown;
+                cartesMain[i].GetComponent<GenerationCarte>().afficher_carte();
+                TextMeshPro t1 = cartesMain[i].transform.GetChild(0).transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshPro>();
+                t1.text = "";
+                TextMeshPro TMP = cartesMain[i].transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshPro>();
+                TMP.text = "";
+
             }
         }
 
     }
-
+    public void spriteChanger()
+    {
+        if (spriteRenderer != null && nouveauSprite != null)
+        {
+            spriteRenderer.sprite = nouveauSprite;
+        }
+        else
+        {
+            Debug.LogWarning("SpriteRenderer ou nouveauSprite n'est pas assigné dans l'inspecteur.");
+        }
+    }
 }

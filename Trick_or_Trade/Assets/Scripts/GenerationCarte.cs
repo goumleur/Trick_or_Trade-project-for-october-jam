@@ -17,7 +17,7 @@ public class GenerationCarte : MonoBehaviour
     int oldOrderInLayer;
 
     public virtual void CreerLaCarte() { }
-   [SerializeField] protected void afficher_carte()
+     public void afficher_carte()
     {
         TextMeshPro tmp = gameObject.transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshPro>();
         tmp.text = "name : " + nom_Carte + "\n" + "\n";

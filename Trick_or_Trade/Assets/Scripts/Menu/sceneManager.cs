@@ -8,8 +8,8 @@ public class sceneManager : MonoBehaviour
         SceneManager.LoadScene(Jeu_de_Carte);
 
     }
-    public void setting(string MenuSetting)
+    public void setting(string MenuSettings)
     {
-        SceneManager.LoadScene(MenuSetting);
+        SceneManager.LoadScene(MenuSettings);
     }
 }
