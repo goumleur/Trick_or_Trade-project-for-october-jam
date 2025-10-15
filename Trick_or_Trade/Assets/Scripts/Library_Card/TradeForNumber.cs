@@ -1,11 +1,7 @@
-using TMPro;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-
-
-public class PropBow : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
+public class TradeForNumber : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
     public bool vaVoler = false;
     public bool vaDetruire = false;
@@ -15,8 +11,8 @@ public class PropBow : GenerationCarte, IPointerEnterHandler, IPointerExitHandle
     }
     override public void CreerLaCarte()
     {
-        nom_Carte = "prop Bow";
-        description_Carte = "Look at your opponents hand and choose a card for them to discard.";
+        nom_Carte = "TradeForNumber";
+        description_Carte = "Discard a card then draw 3 cards.";
         afficher_carte();
         if(gameObject.tag == "Untagged")
         {
@@ -52,9 +48,12 @@ public class PropBow : GenerationCarte, IPointerEnterHandler, IPointerExitHandle
 
     public override void EffetCarte()
     {
-        if (discarded == false)
+        if(discarded == false && gameObject.transform.parent.name != "IAHand" && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false)
         {
-            //discard();
+            discard();
+            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire = true;
+            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser = nom_Carte;
+            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser = gameObject;
         }
     }
 }

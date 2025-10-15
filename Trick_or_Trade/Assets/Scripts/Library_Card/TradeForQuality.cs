@@ -1,22 +1,16 @@
-using TMPro;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-
-
-public class PropBow : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
+public class TradeForQuality : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
-    public bool vaVoler = false;
-    public bool vaDetruire = false;
     void Start()
     {
         CreerLaCarte();
     }
     override public void CreerLaCarte()
     {
-        nom_Carte = "prop Bow";
-        description_Carte = "Look at your opponents hand and choose a card for them to discard.";
+        nom_Carte = "TradeForQuality";
+        description_Carte = "Discard a card then look at the top 5 cards of your deck and put one in your hand. Put the rest on the bottom.";
         afficher_carte();
         if(gameObject.tag == "Untagged")
         {
@@ -49,12 +43,15 @@ public class PropBow : GenerationCarte, IPointerEnterHandler, IPointerExitHandle
     {
         click();
     }
-
     public override void EffetCarte()
     {
-        if (discarded == false)
+        if(discarded == false && gameObject.transform.parent.name != "IAHand" && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false)
         {
-            //discard();
+            Debug.Log("Marche");
+            discard();
+            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire = true;
+            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser = nom_Carte;
+            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser = gameObject;
         }
     }
 }

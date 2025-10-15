@@ -11,11 +11,7 @@ public class deck_joueur : MonoBehaviour
     Vector3 oldPosition;
     Vector3 oldAngle;
 
-    bool regarder = false;
-    public void test()
-    {
-        VoirCarteDessus(5);
-    }
+    public bool regarder = false;
     public void melanger_deck()
     {
         // Stocker les enfants dans une liste
@@ -92,7 +88,7 @@ public class deck_joueur : MonoBehaviour
 
     public void VoirCarteDessus(int nombreCarteAVoir)
     {
-        regarder = true;
+        main = GameObject.Find("main");
         main = GameObject.Find("main");
         List<Transform> carteAVoir = new List<Transform>();
 
@@ -110,7 +106,11 @@ public class deck_joueur : MonoBehaviour
         }
         main.SetActive(false);
         AfficherDiscardOrDeck(carteAVoir);
-        GameObject.Find("Canvas").transform.GetChild(1).GetComponent<BoutonDeposerCarteDessusDeck>().ActiverInteractionBouton();
+        if(regarder == true)
+        {
+            GameObject.Find("Canvas").transform.GetChild(1).GetComponent<BoutonDeposerCarteDessusDeck>().ActiverInteractionBouton();
+        }
+
     }
     public void PutCarteAVoir()
     {
@@ -125,7 +125,28 @@ public class deck_joueur : MonoBehaviour
             Transform cFrameDiscardPile = discardPile.GetComponent<Transform>();
             cFrameCarte.transform.SetPositionAndRotation(cFrameDiscardPile.transform.position, Quaternion.Euler(0f, 90f, 0f));
         }
-        GameObject.Find("Canvas").transform.GetChild(1).GetComponent<BoutonDeposerCarteDessusDeck>().DesactiverInteractionBouton();
+        if (regarder == true)
+        {
+            GameObject.Find("Canvas").transform.GetChild(1).GetComponent<BoutonDeposerCarteDessusDeck>().ActiverInteractionBouton();
+        }
+        if(GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser == "TradeForQuality")
+        {
+            int total = GameObject.Find("Deck").transform.childCount;
+            int count = Mathf.Min(5, total); // Au cas où il y a moins de 5 enfants
+
+            // Stocker les 5 premiers enfants
+            Transform[] premiers = new Transform[count];
+            for (int i = 0; i < count; i++)
+            {
+                premiers[i] = GameObject.Find("Deck").transform.GetChild(i);
+            }
+
+            // Les déplacer à la fin
+            foreach (Transform enfant in premiers)
+            {
+                enfant.SetSiblingIndex(GameObject.Find("Deck").transform.childCount - 1);
+            }
+        }
     }
 
     public void AfficherDiscardOrDeck(List<Transform> carteAAfficher)

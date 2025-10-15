@@ -1,26 +1,20 @@
-using TMPro;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-
-
-public class PropBow : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
+public class LuckyFind : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
-    public bool vaVoler = false;
-    public bool vaDetruire = false;
     void Start()
     {
         CreerLaCarte();
     }
     override public void CreerLaCarte()
     {
-        nom_Carte = "prop Bow";
-        description_Carte = "Look at your opponents hand and choose a card for them to discard.";
+        nom_Carte = "LuckyFind";
+        description_Carte = "When this card is put into your discard pile, you may return a card from your discard pile to the top of your deck.";
         afficher_carte();
-        if(gameObject.tag == "Untagged")
+        if (gameObject.tag == "Untagged")
         {
-            Invoke("TrouverAdvairsaire",0.001f);
+            Invoke("TrouverAdvairsaire", 0.001f);
         }
     }
 
@@ -49,12 +43,13 @@ public class PropBow : GenerationCarte, IPointerEnterHandler, IPointerExitHandle
     {
         click();
     }
-
     public override void EffetCarte()
     {
-        if (discarded == false)
+        if (discarded == false && gameObject.transform.parent.name != "IAHand" && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false && GameObject.Find("DiscardPile").transform.childCount > 0)
         {
-            //discard();
+            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser = nom_Carte;
+            GameObject.Find("DiscardPile").GetComponent<DiscardPile>().CarteASauver(GameObject.Find("DiscardPile").transform.GetChild(GameObject.Find("DiscardPile").transform.childCount - 1).gameObject);
+            discard();
         }
     }
 }

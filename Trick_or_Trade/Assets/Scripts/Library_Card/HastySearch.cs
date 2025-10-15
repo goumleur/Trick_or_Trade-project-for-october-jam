@@ -1,22 +1,16 @@
-using TMPro;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-
-
-public class PropBow : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
+public class HastySearch : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
-    public bool vaVoler = false;
-    public bool vaDetruire = false;
     void Start()
     {
         CreerLaCarte();
     }
     override public void CreerLaCarte()
     {
-        nom_Carte = "prop Bow";
-        description_Carte = "Look at your opponents hand and choose a card for them to discard.";
+        nom_Carte = "HastySearch";
+        description_Carte = "Draw 2 card then discard 2 card. You may play an additional action card this turn.";
         afficher_carte();
         if(gameObject.tag == "Untagged")
         {
@@ -49,12 +43,19 @@ public class PropBow : GenerationCarte, IPointerEnterHandler, IPointerExitHandle
     {
         click();
     }
-
     public override void EffetCarte()
     {
-        if (discarded == false)
+        if(discarded == false && gameObject.transform.parent.name != "IAHand" && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false)
         {
-            //discard();
+            discard();
+            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire = true;
+            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser = nom_Carte;
+            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser = gameObject;
+
+            for (int i = 0; i < 2; i++)
+            {
+                GameObject.Find("Main Camera").GetComponent<main_joueur>().PigerUneCarte();
+            }
         }
     }
 }

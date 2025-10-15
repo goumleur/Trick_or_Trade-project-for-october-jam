@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic; // pour utiliser List<>
 
-public class DiscardPile : MonoBehaviour
+public class IADiscardPile : MonoBehaviour
 {
     Vector3 oldScale;
     Vector3 oldPosition;
@@ -20,16 +20,16 @@ public class DiscardPile : MonoBehaviour
         carte.transform.localPosition = new Vector3(0f, 0f, 0f);
         carte.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
         carte.transform.localScale = new Vector3(1f, 1f, 1f);
-        carte.transform.SetParent(GameObject.Find("DiscardPile").transform, false);
-        GameObject.Find("Main Camera").GetComponent<main_joueur>().DiscardFait(carte);
+        carte.transform.SetParent(GameObject.Find("DiscardPileIA").transform, false);
+        GameObject.Find("IAHand").GetComponent<MainAi>().DiscardFait(carte);
     }
 
 
     public void GetDicardCard()
     {
-        main = GameObject.Find("main");
+        main = GameObject.Find("IAHand");
         List<Transform> enfants = new List<Transform>();
-        Transform discard = GameObject.Find("DiscardPile").transform;
+        Transform discard = GameObject.Find("DiscardPileIA").transform;
 
         oldScale = discard.localScale;
         oldPosition = discard.localPosition;
@@ -49,14 +49,14 @@ public class DiscardPile : MonoBehaviour
     public void PutDiscardCard()
     {
         main.SetActive(true);
-        GameObject.Find("Main Camera").GetComponent<main_joueur>().SauverCarte(carteASauver);
+        GameObject.Find("IAHand").GetComponent<MainAi>().SauverCarte(carteASauver);
         Transform discard = GameObject.Find("DiscardPile").transform;
         discard.transform.SetPositionAndRotation(oldPosition, Quaternion.Euler(oldAngle));
         discard.transform.localScale = oldScale;
         foreach (Transform enfant in discard)
         {
             Transform cFrameCarte = enfant.GetComponent<Transform>();
-            GameObject discardPile = GameObject.Find("DiscardPile");
+            GameObject discardPile = GameObject.Find("DiscardPileIA");
             Transform cFrameDiscardPile = discardPile.GetComponent<Transform>();
             cFrameCarte.transform.SetPositionAndRotation(cFrameDiscardPile.transform.position, Quaternion.Euler(0f, 90f, 0f));
         }
@@ -96,4 +96,3 @@ public class DiscardPile : MonoBehaviour
 
     }
 }
-

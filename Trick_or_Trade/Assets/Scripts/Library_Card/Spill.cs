@@ -1,22 +1,15 @@
-using TMPro;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.EventSystems;
-
-
-
-public class PropBow : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
+public class Spill : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
-    public bool vaVoler = false;
-    public bool vaDetruire = false;
     void Start()
     {
         CreerLaCarte();
     }
     override public void CreerLaCarte()
     {
-        nom_Carte = "prop Bow";
-        description_Carte = "Look at your opponents hand and choose a card for them to discard.";
+        nom_Carte = "Spill";
+        description_Carte = "The opponents discard the top 4 cards of their deck.";
         afficher_carte();
         if(gameObject.tag == "Untagged")
         {
@@ -49,12 +42,16 @@ public class PropBow : GenerationCarte, IPointerEnterHandler, IPointerExitHandle
     {
         click();
     }
-
     public override void EffetCarte()
     {
-        if (discarded == false)
+        if(discarded == false && gameObject.transform.parent.name != "IAHand" && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false)
         {
-            //discard();
+            discard();
+            for(int i = 0; i < 4; i++)
+            {
+                GameObject carteADiscard = GameObject.Find("DeckIA").transform.GetChild(0).gameObject;
+                GameObject.Find("DiscardPileIA").GetComponent<IADiscardPile>().discardCard(carteADiscard);
+            }
         }
     }
 }
