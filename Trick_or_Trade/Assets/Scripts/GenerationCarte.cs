@@ -5,7 +5,7 @@ using TMPro;
 public class GenerationCarte : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-   [SerializeField] public string nom_Carte = "Carte Inconnue";
+    [SerializeField] public string nom_Carte = "Carte Inconnue";
     [SerializeField] protected string description_Carte = "Aucune description";
 
     [SerializeField] protected Sprite backRound;
@@ -24,16 +24,16 @@ public class GenerationCarte : MonoBehaviour
     int oldOrderInLayer;
 
     public virtual void CreerLaCarte() { }
-    public virtual void EffetCarte() {}
-     public void afficher_carte()
+    public virtual void EffetCarte() { }
+    public void afficher_carte()
     {
         TextMeshPro tmp = gameObject.transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshPro>();
         tmp.text = "name : " + nom_Carte + "\n" + "\n";
         TextMeshPro t1 = gameObject.transform.GetChild(0).transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshPro>();
         t1.text = "description : " + description_Carte;
-        
+
     }
-    protected void VolerCarteAdvairsaire(GameObject carteViser)
+    protected void VolerCarteAdvairsaire(GameObject carteViser) // Permet de changer la carte du joueur
     {
         EnleverCarteZoom();
         if (advairsaire == "main")
@@ -47,7 +47,7 @@ public class GenerationCarte : MonoBehaviour
         }
         TrouverAdvairsaire();
     }
-    protected void DetruireCarteAdvairsaire(GameObject carteViser)
+    protected void DetruireCarteAdvairsaire(GameObject carteViser) // Permet de détruire UNIQUEMENT la carte
     {
         Debug.Log(advairsaire);
         if (advairsaire == "main")
@@ -61,7 +61,7 @@ public class GenerationCarte : MonoBehaviour
             GameObject.Find("Main Camera").GetComponent<main_joueur>().DetruireCarte(carteViser);
         }
     }
-    protected void AfficherCarteZoom()
+    protected void AfficherCarteZoom() // Zoom la carte sur de la main
     {
         Transform parent = GameObject.Find("Zoom").transform;
         clone = Instantiate(gameObject, parent, true);
@@ -81,7 +81,7 @@ public class GenerationCarte : MonoBehaviour
         gameObject.transform.localScale = new Vector2(1.1f, 1.1f);
 
     }
-    protected void EnleverCarteZoom()
+    protected void EnleverCarteZoom() // Dezoom la carte de la main
     {
         gameObject.GetComponent<Renderer>().sortingOrder = oldOrderInLayer;
         gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingOrder = oldOrderInLayer;
@@ -91,7 +91,7 @@ public class GenerationCarte : MonoBehaviour
         gameObject.transform.localScale = new Vector2(1f, 1f);
         Destroy(clone);
     }
-    protected void TrouverAdvairsaire()
+    protected void TrouverAdvairsaire() // Set l'advairsaire a la création de la carte
     {
         if (gameObject.transform.parent.name == "main" || gameObject.transform.parent.name == "Deck")
         {
@@ -102,7 +102,7 @@ public class GenerationCarte : MonoBehaviour
             advairsaire = "main";
         }
     }
-    protected void clearMemoire()
+    protected void clearMemoire() // Reset la memoire de MemoireDesCartes
     {
         GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser = null;
         GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser = null;
@@ -111,7 +111,7 @@ public class GenerationCarte : MonoBehaviour
         GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetVoler = null;
     }
 
-    protected void click()
+    protected void click() // Condition auquelle toute les cartes peuvent etre affecter (discard, detruire, sauver, voler, trade(trade c 2 Vavoler))
     {
         if (discarded == true && GameObject.Find("DiscardPile").GetComponent<DiscardPile>().carteASauver == null) // Pour chercher une carte de la discard pile, ne pas mettre de condition dadans
         {
@@ -252,7 +252,7 @@ public class GenerationCarte : MonoBehaviour
         {
             AfficherCarteZoom();
         }
-        else if(GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser == "BlindTrade" && advairsaire == "IAHand")
+        else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser == "BlindTrade" && advairsaire == "IAHand")
         {
             AfficherCarteZoom();
         }
@@ -275,9 +275,12 @@ public class GenerationCarte : MonoBehaviour
         {
             EnleverCarteZoom();
         }
-        else if(GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser == "BlindTrade" && advairsaire == "IAHand")
+        else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser == "BlindTrade" && advairsaire == "IAHand")
         {
             EnleverCarteZoom();
         }
     }
 }
+
+// VaVoler : variable bool qui indique qu'une carte va etre envoyer de l'autre main (ex. main -> mainIA)
+// VaDetruire : variable bool qui indique qu'une carte va etre sois détruite ou discard
