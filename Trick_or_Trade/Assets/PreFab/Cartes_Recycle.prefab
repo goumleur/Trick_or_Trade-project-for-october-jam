@@ -664,3 +664,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nom_Carte: Carte Inconnue
   description_Carte: Aucune description
+  backRound: {fileID: 0}
+  advairsaire: 
+  vaVoler: 0
+  vaDetruire: 0
+  regarder: 0
