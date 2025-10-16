@@ -28,8 +28,8 @@ public class TurnManager : MonoBehaviour
     void Start()
     {
         // find AIController if present
-        var obj = GameObject.FindObjectOfType<AIController>();
-        if (obj != null) aiController = obj;
+        var obj = GameObject.Find("AIController");
+        if (obj != null) aiController = obj.GetComponent<AIController>();
 
         StartPlayerTurn();
     }
