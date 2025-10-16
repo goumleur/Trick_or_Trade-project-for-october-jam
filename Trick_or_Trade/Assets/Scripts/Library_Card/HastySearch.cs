@@ -12,6 +12,7 @@ public class HastySearch : GenerationCarte, IPointerEnterHandler, IPointerExitHa
         nom_Carte = "HastySearch";
         description_Carte = "Draw 2 card then discard 2 card. You may play an additional action card this turn.";
         afficher_carte();
+        typeCard = "Action";
         if(gameObject.tag == "Untagged")
         {
             Invoke("TrouverAdvairsaire",0.001f);

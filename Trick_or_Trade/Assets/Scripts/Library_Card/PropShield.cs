@@ -14,6 +14,7 @@ public class PropShield : GenerationCarte, IPointerEnterHandler, IPointerExitHan
         nom_Carte = "Prop Shield";
         description_Carte = "When your opponent attempts to steal cards from you, you may activate this to counter that effect.";
         afficher_carte();
+        typeCard = "Action";
         if (gameObject.tag == "Untagged")
         {
             Invoke("TrouverAdvairsaire", 0.001f);

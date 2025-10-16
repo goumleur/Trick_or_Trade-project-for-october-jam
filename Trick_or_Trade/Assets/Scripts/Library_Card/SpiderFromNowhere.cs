@@ -14,6 +14,7 @@ public class SpiderFromNowhere : GenerationCarte, IPointerEnterHandler, IPointer
         nom_Carte = "SpidersFromNowhere";
         description_Carte = "When this card is discarded, replace 2 candies in your opponents deck with Spiders from Nowhere.";
         afficher_carte();
+        typeCard = "Trick";
         if (gameObject.tag == "Untagged")
         {
             Invoke("TrouverAdvairsaire", 0.001f);

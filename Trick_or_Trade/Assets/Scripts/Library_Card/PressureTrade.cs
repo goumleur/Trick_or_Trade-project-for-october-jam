@@ -12,6 +12,7 @@ public class PressureTrade : GenerationCarte, IPointerEnterHandler, IPointerExit
         nom_Carte = "PressureTrade";
         description_Carte = "Look at your opponents hand. You may exchange one card from your hand with one from your opponent's.";
         afficher_carte();
+        typeCard = "Action";
         if(gameObject.tag == "Untagged")
         {
             Invoke("TrouverAdvairsaire",0.001f);

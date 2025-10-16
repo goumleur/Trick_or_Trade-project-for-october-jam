@@ -11,6 +11,7 @@ public class Spill : GenerationCarte, IPointerEnterHandler, IPointerExitHandler,
         nom_Carte = "Spill";
         description_Carte = "The opponents discard the top 4 cards of their deck.";
         afficher_carte();
+        typeCard = "Action";
         if(gameObject.tag == "Untagged")
         {
             Invoke("TrouverAdvairsaire",0.001f);

@@ -1,20 +1,18 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class TradeForNumber : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
+public class Foresight : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
-    public bool vaVoler = false;
-    public bool vaDetruire = false;
     void Start()
     {
         CreerLaCarte();
     }
     override public void CreerLaCarte()
     {
-        nom_Carte = "TradeForNumber";
-        description_Carte = "Discard a card then draw 3 cards.";
+        nom_Carte = "Foresight";
+        description_Carte = "Counter a trick card.";
         afficher_carte();
-        typeCard = "Action";
+        typeCard = "Trick";
         if(gameObject.tag == "Untagged")
         {
             Invoke("TrouverAdvairsaire",0.001f);
@@ -46,15 +44,7 @@ public class TradeForNumber : GenerationCarte, IPointerEnterHandler, IPointerExi
     {
         click();
     }
-
     public override void EffetCarte()
     {
-        if(discarded == false && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false)
-        {
-            discard();
-            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire = true;
-            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser = nom_Carte;
-            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser = gameObject;
-        }
     }
 }

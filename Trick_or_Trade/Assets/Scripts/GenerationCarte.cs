@@ -3,6 +3,8 @@ using TMPro;
 using System.Collections;
 using System.Threading.Tasks;
 using System.Threading;
+using UnityEngine.UI;
+using Unity.VisualScripting;
 
 
 public class GenerationCarte : MonoBehaviour
@@ -24,6 +26,7 @@ public class GenerationCarte : MonoBehaviour
     [SerializeField] protected Sprite backRound;
     [SerializeField] protected Sprite illustration;
     protected bool discarded = false;
+    public string typeCard;
 
     public void discard()
     {
@@ -48,9 +51,12 @@ public class GenerationCarte : MonoBehaviour
     }
     protected void VolerCarteAdvairsaire(GameObject carteViser) // Permet de changer la carte du joueur
     {
-        EnleverCarteZoom();
-        mainAdvairsaire.GetComponent<Mains>().PrendreCarte(carteViser);
-        TrouverAdvairsaire();
+        if (carteViser.GetComponent<GenerationCarte>().nom_Carte != "Trick Coin")
+        {
+            EnleverCarteZoom();
+            mainAdvairsaire.GetComponent<Mains>().PrendreCarte(carteViser);
+            TrouverAdvairsaire();
+        }
     }
     protected void DetruireCarte(GameObject carteViser) // Permet de détruire UNIQUEMENT la carte
     {
@@ -178,9 +184,9 @@ public class GenerationCarte : MonoBehaviour
             discardPile = GameObject.Find("DiscardPile");
             deck = GameObject.Find("Deck");
 
-            mainAdvairsaire = GameObject.Find("IAHand");
+            mainAdvairsaire = GameObject.Find("IAHand"); // Temporaire
             discardPileAdvairsaire = GameObject.Find("DiscardPileIA");
-            deckAdvairsaire = GameObject.Find("DeckIA");
+            deckAdvairsaire = GameObject.Find("main");
         }
         else if (advairsaire == "main")
         {
@@ -197,12 +203,37 @@ public class GenerationCarte : MonoBehaviour
     {
         for (int i = 0; i < mainAdvairsaire.transform.childCount; i++)
         {
-            if (mainAdvairsaire.transform.GetChild(i).GetComponent<GenerationCarte>().nom_Carte == "Prop Shield")
+            Debug.Log(main.name);
+            if (mainAdvairsaire.transform.GetChild(i).GetComponent<GenerationCarte>().nom_Carte == "Prop Shield" && mainAdvairsaire.transform.GetChild(i).GetComponent<GenerationCarte>().advairsaire != advairsaire)
             {
                 if (mainAdvairsaire.name == "main")
                 {
                     GameObject.Find("Canvas").transform.GetChild(4).GetComponent<BoutonDeposerCarteDessusDeck>().ActiverInteractionBouton();
+                    GameObject.Find("Canvas").transform.GetChild(4).GetChild(0).GetComponent<TextMeshProUGUI>().text = "Protect";
                     GameObject.Find("Canvas").transform.GetChild(5).GetComponent<BoutonDeposerCarteDessusDeck>().ActiverInteractionBouton();
+                    GameObject.Find("Canvas").transform.GetChild(5).GetChild(0).GetComponent<TextMeshProUGUI>().text = "Don't Protect";
+                    StartCoroutine(MyCoroutine(mainAdvairsaire.transform.GetChild(i)));
+                    return;
+                }
+                else
+                {
+                    GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().protect = true;
+                    discardPileAdvairsaire.GetComponent<DiscardsPiles>().discardCard(mainAdvairsaire.transform.GetChild(i).gameObject);
+                    Continuer();
+                    return;
+                }
+            }
+        }
+        for (int i = 0; i < mainAdvairsaire.transform.childCount; i++)
+        {
+            if (mainAdvairsaire.transform.GetChild(i).GetComponent<GenerationCarte>().nom_Carte == "Foresight" && typeCard == "Trick")
+            {
+                if (mainAdvairsaire.name == "main")
+                {
+                    GameObject.Find("Canvas").transform.GetChild(4).GetComponent<BoutonDeposerCarteDessusDeck>().ActiverInteractionBouton();
+                    GameObject.Find("Canvas").transform.GetChild(4).GetChild(0).GetComponent<TextMeshProUGUI>().text = "Counter";
+                    GameObject.Find("Canvas").transform.GetChild(5).GetComponent<BoutonDeposerCarteDessusDeck>().ActiverInteractionBouton();
+                    GameObject.Find("Canvas").transform.GetChild(5).GetChild(0).GetComponent<TextMeshProUGUI>().text = "Don't Counter";
 
                     StartCoroutine(MyCoroutine(mainAdvairsaire.transform.GetChild(i)));
                     return;
@@ -215,8 +246,28 @@ public class GenerationCarte : MonoBehaviour
                     return;
                 }
             }
-            Continuer();
+            else if(mainAdvairsaire.transform.GetChild(i).GetComponent<GenerationCarte>().nom_Carte == "Hasty Sabotage" && typeCard == "Action")
+            {
+                if (mainAdvairsaire.name == "main")
+                {
+                    GameObject.Find("Canvas").transform.GetChild(4).GetComponent<BoutonDeposerCarteDessusDeck>().ActiverInteractionBouton();
+                    GameObject.Find("Canvas").transform.GetChild(4).GetChild(0).GetComponent<TextMeshProUGUI>().text = "Sabotage";
+                    GameObject.Find("Canvas").transform.GetChild(5).GetComponent<BoutonDeposerCarteDessusDeck>().ActiverInteractionBouton();
+                    GameObject.Find("Canvas").transform.GetChild(5).GetChild(0).GetComponent<TextMeshProUGUI>().text = "Keep";
+
+                    StartCoroutine(MyCoroutine(mainAdvairsaire.transform.GetChild(i)));
+                    return;
+                }
+                else
+                {
+                    GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().protect = true;
+                    discardPileAdvairsaire.GetComponent<DiscardsPiles>().discardCard(mainAdvairsaire.transform.GetChild(i).gameObject);
+                    Continuer();
+                    return;
+                }
+            }
         }
+        Continuer();
     }
 
     IEnumerator MyCoroutine(Transform card)
@@ -226,8 +277,18 @@ public class GenerationCarte : MonoBehaviour
         coroutineEnAction = false;
         if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().protect == true)
         {
-            discardPile.GetComponent<DiscardsPiles>().discardCard(card.gameObject);
+            if (card.GetComponent<GenerationCarte>().nom_Carte == "Prop Shield")
+            {
+                discardPileAdvairsaire.GetComponent<DiscardsPiles>().discardCard(card.gameObject);
+            }
+            else
+            {
+                discardPile.GetComponent<DiscardsPiles>().discardCard(card.gameObject);
+            }
+            
         }
+        GameObject.Find("Canvas").transform.GetChild(4).GetComponent<BoutonDeposerCarteDessusDeck>().DesactiverInteractionBouton();
+        GameObject.Find("Canvas").transform.GetChild(5).GetComponent<BoutonDeposerCarteDessusDeck>().DesactiverInteractionBouton();
         GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().boutonUse = false;
         Continuer();
     }
@@ -236,9 +297,9 @@ public class GenerationCarte : MonoBehaviour
     {
         if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().protect == true)
         {
-            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().protect = false;
-            Debug.Log("Protéger");
             discard();
+            EnleverCarteZoom();
+            clearMemoire(); // Clear la memoire
         }
         else
         {
@@ -356,22 +417,51 @@ public class GenerationCarte : MonoBehaviour
                 }
                 else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser == "prop Bow")
                 {
-                    Debug.Log(GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser.GetComponent<GenerationCarte>().advairsaire == gameObject.transform.parent.name);
                     if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser.GetComponent<GenerationCarte>().advairsaire == gameObject.transform.parent.name)
                     {
                         discard();
                         clearMemoire();
                     }
                 }
+                else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser == "Prop Sword")
+                {
+                    if(GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser.GetComponent<GenerationCarte>().advairsaire != gameObject.transform.parent.name)
+                    {
+                        if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().multipleDiscard == 0) // Si c'est la premiere carte discard
+                        {
+                            discard(); // Fonction pour discard
+                            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().multipleDiscard = 1; // Ajoute 1 au compteur de fois utiliser
+                        }
+                        else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().multipleDiscard == 1)// Si c'Est la deuxieme carte discard
+                        {
+                            discard();// Fonction pour discard
+                            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().multipleDiscard = 0; // remet a 0 le compteur de fois utiliser
+                            clearMemoire(); // Fonction pour clear la memoire
+                        }
+                    }
+                }
             }
-            else if (main.name == "main")
+            else if (main.name == "main" && nom_Carte != "Prop Shield" && nom_Carte != "Trick Coin" && nom_Carte != "Foresight" && nom_Carte != "Hasty Sabotage")
             {
                 EffetCarte(); // Effet de la carte utilliser
             }
 
             // NOTE : ici il y a toute les if qui sont dans toutes les cartes, sois pour volé ou detruire ou discard, etc. IMPORTANT D'UTILISER LA MEMOIRE ET DE LA CLEAR
         }
-        
+        if (main.GetComponent<Mains>().cartesMain.Count == 0)
+        {
+            if (main.GetComponent<Mains>().cartesDisponibles.Count > 0)
+            {
+                main.GetComponent<Mains>().PigerMainDeDepart();
+            }
+        }
+        if (mainAdvairsaire.GetComponent<Mains>().cartesMain.Count == 0)
+        {
+            if (mainAdvairsaire.GetComponent<Mains>().cartesDisponibles.Count > 0)
+            {
+                mainAdvairsaire.GetComponent<Mains>().PigerMainDeDepart();
+            }
+        }
     }
 }
 

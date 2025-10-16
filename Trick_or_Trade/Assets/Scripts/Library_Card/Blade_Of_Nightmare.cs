@@ -16,6 +16,7 @@ public class Blade_Of_Nightmare : GenerationCarte, IPointerEnterHandler, IPointe
         backRound = Resources.Load<Sprite>("Assets/Images/CardFrames/CommonEnemyTrick.png");
         illustration = Resources.Load<Sprite>("Assets/Images/CardIcon/ImageRecycle.jpg");
         afficher_carte();
+        typeCard = "Action";
         if(gameObject.tag == "Untagged")
         {
             Invoke("TrouverAdvairsaire",0.001f);

@@ -12,6 +12,7 @@ public class LuckyFind : GenerationCarte, IPointerEnterHandler, IPointerExitHand
         nom_Carte = "LuckyFind";
         description_Carte = "When this card is put into your discard pile, you may return a card from your discard pile to the top of your deck.";
         afficher_carte();
+        typeCard = "Trick";
         if (gameObject.tag == "Untagged")
         {
             Invoke("TrouverAdvairsaire", 0.001f);

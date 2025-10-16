@@ -11,6 +11,7 @@ public class BlindTrade : GenerationCarte, IPointerEnterHandler, IPointerExitHan
         nom_Carte = "BlindTrade";
         description_Carte = "Each player chooses a card from their hand and trade them.";
         afficher_carte();
+        typeCard = "Action";
         if (gameObject.tag == "Untagged")
         {
             Invoke("TrouverAdvairsaire", 0.001f);

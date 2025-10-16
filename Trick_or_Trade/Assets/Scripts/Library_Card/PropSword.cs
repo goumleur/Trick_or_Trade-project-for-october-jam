@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class TradeForNumber : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
+public class PropSword : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
     public bool vaVoler = false;
     public bool vaDetruire = false;
@@ -11,8 +11,8 @@ public class TradeForNumber : GenerationCarte, IPointerEnterHandler, IPointerExi
     }
     override public void CreerLaCarte()
     {
-        nom_Carte = "TradeForNumber";
-        description_Carte = "Discard a card then draw 3 cards.";
+        nom_Carte = "Prop Sword";
+        description_Carte = "Your opponent discards two cards.";
         afficher_carte();
         typeCard = "Action";
         if(gameObject.tag == "Untagged")
@@ -31,17 +31,6 @@ public class TradeForNumber : GenerationCarte, IPointerEnterHandler, IPointerExi
         sourisSortiCarte();
     }
 
-    public void SetVoler()
-    {
-        Debug.Log("Le joueur s'apprente a volé une carte");
-        GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaVoler = true;
-    }
-    public void VaDetruire()
-    {
-        Debug.Log("Le joueur s'apprente a volé une carte");
-        GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire = true;
-    }
-
     public void OnPointerDown(PointerEventData eventData)
     {
         click();
@@ -51,10 +40,11 @@ public class TradeForNumber : GenerationCarte, IPointerEnterHandler, IPointerExi
     {
         if(discarded == false && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false)
         {
+            Debug.Log("Je marche");
             discard();
             GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire = true;
-            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser = nom_Carte;
             GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser = gameObject;
+            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser = nom_Carte;
         }
     }
 }

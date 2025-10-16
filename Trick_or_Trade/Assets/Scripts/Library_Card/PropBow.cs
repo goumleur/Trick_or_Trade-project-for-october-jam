@@ -18,6 +18,7 @@ public class PropBow : GenerationCarte, IPointerEnterHandler, IPointerExitHandle
         nom_Carte = "prop Bow";
         description_Carte = "Look at your opponents hand and choose a card for them to discard.";
         afficher_carte();
+        typeCard = "Action";
         if(gameObject.tag == "Untagged")
         {
             Invoke("TrouverAdvairsaire",0.001f);

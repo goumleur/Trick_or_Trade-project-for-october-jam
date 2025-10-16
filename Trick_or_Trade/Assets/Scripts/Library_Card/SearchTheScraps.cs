@@ -12,6 +12,7 @@ public class SearchTheScraps : GenerationCarte, IPointerEnterHandler, IPointerEx
         nom_Carte = "Search the Scraps";
         description_Carte = "Put all candy card from your discard pile to your hand.";
         afficher_carte();
+        typeCard = "Action";
         if(gameObject.tag == "Untagged")
         {
             Invoke("TrouverAdvairsaire",0.001f);

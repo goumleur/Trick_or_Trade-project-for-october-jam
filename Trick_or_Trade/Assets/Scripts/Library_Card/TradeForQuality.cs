@@ -12,6 +12,7 @@ public class TradeForQuality : GenerationCarte, IPointerEnterHandler, IPointerEx
         nom_Carte = "TradeForQuality";
         description_Carte = "Discard a card then look at the top 5 cards of your deck and put one in your hand. Put the rest on the bottom.";
         afficher_carte();
+        typeCard = "Action";
         if(gameObject.tag == "Untagged")
         {
             Invoke("TrouverAdvairsaire",0.001f);

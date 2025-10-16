@@ -28,7 +28,7 @@ public class MainAi : Mains
         cartesDisponibles.Clear();
         for (int i = 0; i < 40; i++)
         {
-            GameObject carteModel = GameObject.Find("PropShield"); // Trouver le model de carte
+            GameObject carteModel = GameObject.Find("ZombieHand"); // Trouver le model de carte
             Transform parent = GameObject.Find("DeckIA").transform; // Trouver le deck pour le futur enfant
             GameObject carteClone = Instantiate(carteModel, parent, true); // cloner le model & set le parent de la carte (a deck)
             carteClone.name = (i + 40).ToString(); // Set le nom au numéro de génération
@@ -40,17 +40,31 @@ public class MainAi : Mains
     }
     override public void modifierCarte(Transform carteAModifier, GameObject carteResultant)
     {
+        Debug.Log("Marche");
         GameObject carteModel = carteResultant; // Trouver le model de carte
         Transform parent = GameObject.Find("DeckIA").transform; // Trouver le deck pour le futur enfant
         GameObject carteClone = Instantiate(carteModel, parent, true); // cloner le model & set le parent de la carte (a deck)
         carteClone.name = carteAModifier.name; // Set le nom au numéro de génération
         cartesDisponibles.Add(carteClone); // Ajouter la carte dans la liste
+        cartesDisponibles.Remove(carteAModifier.gameObject);
         Destroy(carteAModifier.gameObject);
         carteClone.tag = "Untagged";
     }
+    override public void modifierCarteMain(Transform carteAModifier, GameObject carteResultant)
+    {
+        GameObject carteModel = carteResultant; // Trouver le model de carte
+        Transform parent = GameObject.Find("IAHand").transform; // Trouver le deck pour le futur enfant
+        GameObject carteClone = Instantiate(carteModel, parent, true); // cloner le model & set le parent de la carte (a deck)
+        carteClone.name = carteAModifier.name; // Set le nom au numéro de génération
+        cartesMain.Add(carteClone); // Ajouter la carte dans la liste
+        cartesMain.Remove(carteAModifier.gameObject);
+        Destroy(carteAModifier.gameObject);
+        carteClone.tag = "Untagged";
+        OrganiserLaMain();
+    }
 
     //  Pioche 8 cartes différentes au début du round
-    public void PigerMainDeDepart()
+    override public void PigerMainDeDepart()
     {
         cartesMain.Clear();
 
@@ -94,8 +108,8 @@ public class MainAi : Mains
         cartesMain.Add(carte);
         GameObject parent = GameObject.Find("IAHand"); // Chercher l'objet main
         carte.transform.SetParent(parent.transform, worldPositionStays: true);
-        GameObject.Find("Main Camera").GetComponent<main_joueur>().cartesMain.Remove(carte);
-        GameObject.Find("Main Camera").GetComponent<main_joueur>().OrganiserLaMain();
+        GameObject.Find("main").GetComponent<main_joueur>().cartesMain.Remove(carte);
+        GameObject.Find("main").GetComponent<main_joueur>().OrganiserLaMain();
         OrganiserLaMain(); // Appeller la fonction pour organiser la main a 0,1 sec apres pour éviter les erreur
 
     }

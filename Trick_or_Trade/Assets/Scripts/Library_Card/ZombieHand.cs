@@ -13,6 +13,7 @@ public class ZombieHand : GenerationCarte, IPointerEnterHandler, IPointerExitHan
         nom_Carte = "ZombieHand";
         description_Carte = "When this card enters an opponents hand, that player discards 2 cards.";
         afficher_carte();
+        typeCard = "Trick";
         if (gameObject.tag == "Untagged")
         {
             Invoke("TrouverAdvairsaire", 0.001f);

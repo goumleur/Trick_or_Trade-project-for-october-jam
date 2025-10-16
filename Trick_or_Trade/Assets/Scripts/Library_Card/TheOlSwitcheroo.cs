@@ -16,6 +16,7 @@ public class TheOlSwitcheroo :GenerationCarte, IPointerEnterHandler, IPointerExi
         backRound = Resources.Load<Sprite>("Assets/Images/CardFrames/CommonEnemyTrick.png");
         illustration = Resources.Load<Sprite>("Assets/Images/CardIcon/ImageRecycle.jpg");
         afficher_carte();
+        typeCard = "Action";
         if(gameObject.tag == "Untagged")
         {
             Invoke("TrouverAdvairsaire",0.001f);
@@ -52,7 +53,7 @@ public class TheOlSwitcheroo :GenerationCarte, IPointerEnterHandler, IPointerExi
         // Effect: "Exchange hands with your opponent." - swap all cards between main and IAHand
         if (discarded == false)
         {
-            var player = GameObject.Find("Main Camera").GetComponent<main_joueur>();
+            var player = GameObject.Find("main").GetComponent<main_joueur>();
             var ai = GameObject.Find("IAHand").GetComponent<MainAi>();
 
             if (player != null && ai != null)
@@ -71,6 +72,7 @@ public class TheOlSwitcheroo :GenerationCarte, IPointerEnterHandler, IPointerExi
                     if (c == null) continue;
                     c.transform.SetParent(GameObject.Find("main").transform, worldPositionStays: true);
                     player.cartesMain.Add(c);
+                    ai.cartesMain.Remove(c);
                 }
 
                 // Reparent player cards to AI hand
@@ -79,6 +81,7 @@ public class TheOlSwitcheroo :GenerationCarte, IPointerEnterHandler, IPointerExi
                     if (c == null) continue;
                     c.transform.SetParent(GameObject.Find("IAHand").transform, worldPositionStays: true);
                     ai.cartesMain.Add(c);
+                    player.cartesMain.Remove(c);
                 }
 
                 // Reorganize both hands

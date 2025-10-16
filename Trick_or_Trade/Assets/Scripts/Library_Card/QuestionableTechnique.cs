@@ -18,6 +18,7 @@ public class QuestionableTechnique : GenerationCarte, IPointerEnterHandler, IPoi
         nom_Carte = "Questionable technique";
         description_Carte = "Discard or destroy a cards from your hand.";
         afficher_carte();
+        typeCard = "Action";
         if(gameObject.tag == "Untagged")
         {
             Invoke("TrouverAdvairsaire",0.001f);
