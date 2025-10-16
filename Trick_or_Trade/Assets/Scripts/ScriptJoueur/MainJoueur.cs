@@ -27,7 +27,7 @@ public class main_joueur : MonoBehaviour
         cartesDisponibles.Clear();
         for (int i = 0; i < 40; i++)
         {
-            GameObject carteModel = GameObject.Find("SpidersFromNowhere"); // Trouver le model de carte
+            GameObject carteModel = GameObject.Find("WatchTheWorldBurn"); // Trouver le model de carte
             Transform parent = GameObject.Find("Deck").transform; // Trouver le deck pour le futur enfant
             GameObject carteClone = Instantiate(carteModel, parent, true); // cloner le model & set le parent de la carte (a deck)
             carteClone.name = i.ToString(); // Set le nom au numéro de génération
