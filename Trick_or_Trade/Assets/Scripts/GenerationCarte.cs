@@ -32,6 +32,10 @@ public class GenerationCarte : MonoBehaviour
     {
         discarded = true;
         discardPile.GetComponent<DiscardsPiles>().discardCard(gameObject);
+        // Notify turn manager that this card counted as a play (SendMessage avoids direct type reference)
+        var tmObj = GameObject.Find("TurnManager");
+        if (tmObj != null)
+            tmObj.SendMessage("OnCardPlayed", gameObject.transform.parent != null ? gameObject.transform.parent.name : "main", SendMessageOptions.DontRequireReceiver);
     }
 
     public string advairsaire;
@@ -444,6 +448,10 @@ public class GenerationCarte : MonoBehaviour
             else if (main.name == "main" && nom_Carte != "Prop Shield" && nom_Carte != "Trick Coin" && nom_Carte != "Foresight" && nom_Carte != "Hasty Sabotage")
             {
                 EffetCarte(); // Effet de la carte utilliser
+                // Notify TurnManager that the active player played a card (SendMessage avoids direct type reference)
+                var tmObj2 = GameObject.Find("TurnManager");
+                if (tmObj2 != null)
+                    tmObj2.SendMessage("OnCardPlayed", gameObject.transform.parent != null ? gameObject.transform.parent.name : "main", SendMessageOptions.DontRequireReceiver);
             }
 
             // NOTE : ici il y a toute les if qui sont dans toutes les cartes, sois pour volé ou detruire ou discard, etc. IMPORTANT D'UTILISER LA MEMOIRE ET DE LA CLEAR
