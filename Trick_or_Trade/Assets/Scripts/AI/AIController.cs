@@ -8,8 +8,8 @@ using UnityEngine;
 // - Plays are executed by calling the card's EffetCarte() directly and waiting short delays.
 public class AIController : MonoBehaviour
 {
-    [Tooltip("How many cards the AI attempts to play in one turn (MVP: 1)")]
-    public int playsPerTurn = 1;
+    [Tooltip("How many cards the AI attempts to play in one turn. TurnManager controls this value at runtime.")]
+    public int playsPerTurn = 3;
 
     // Names of cards that require additional player interaction. The AI will avoid them for now.
     // Add more names here if you know a card requires multi-step choices.
@@ -33,8 +33,8 @@ public class AIController : MonoBehaviour
         // Small delay to make behavior visible
         yield return new WaitForSeconds(0.4f);
 
-        int plays = 0;
-        for (; plays < playsPerTurn; plays++)
+    int plays = 0;
+    for (; plays < playsPerTurn; plays++)
         {
             var iaHand = GameObject.Find("IAHand");
             if (iaHand == null || iaHand.transform.childCount == 0)
@@ -91,6 +91,8 @@ public class AIController : MonoBehaviour
 
                 // Wait a short moment for game objects to reparent/discard logic to run
                 yield return new WaitForSeconds(0.35f);
+                // Notify TurnManager that AI played a card
+                TurnManager.Instance?.OnCardPlayed("IAHand");
             }
         }
 
