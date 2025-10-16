@@ -48,18 +48,17 @@ public class LightEmUp : GenerationCarte, IPointerEnterHandler, IPointerExitHand
     public override void EffetCarte()
     {
         // Effect: "Destroy a random card in your opponent's hand." (choose random child of IAHand)
-        if (discarded == false && gameObject.transform.parent.name != "IAHand")
+        if (discarded == false)
         {
-            var iaHandObj = GameObject.Find("IAHand");
-            if (iaHandObj != null && iaHandObj.transform.childCount > 0)
+            if (mainAdvairsaire != null && mainAdvairsaire.transform.childCount > 0)
             {
-                int count = iaHandObj.transform.childCount;
+                int count = mainAdvairsaire.transform.childCount;
                 int idx = Random.Range(0, count);
-                var target = iaHandObj.transform.GetChild(idx).gameObject;
+                var target = mainAdvairsaire.transform.GetChild(idx).gameObject;
                 if (target != null)
                 {
-                    var ai = iaHandObj.GetComponent<MainAi>();
-                    if (ai != null) ai.DetruireCarte(target);
+                    var ai = mainAdvairsaire.GetComponent<MainAi>();
+                    if (ai != null) DetruireCarte(target);
                     else Destroy(target);
                 }
             }

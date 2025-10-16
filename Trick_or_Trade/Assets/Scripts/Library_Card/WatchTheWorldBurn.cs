@@ -50,9 +50,9 @@ public class WatchTheWorldBurn : GenerationCarte, IPointerEnterHandler, IPointer
     public override void EffetCarte()
     {
         // Effect: "Destroy all cards in both player's hands." (when played by the player)
-        if (discarded == false && gameObject.transform.parent.name != "IAHand")
+        if (discarded == false)
         {
-            var player = GameObject.Find("Main Camera").GetComponent<main_joueur>();
+            var player = GameObject.Find("main").GetComponent<main_joueur>();
             var ai = GameObject.Find("IAHand").GetComponent<MainAi>();
 
             if (player != null)
@@ -62,7 +62,8 @@ public class WatchTheWorldBurn : GenerationCarte, IPointerEnterHandler, IPointer
                 foreach (var c in pCards)
                 {
                     if (c == null) continue;
-                    player.DetruireCarte(c);
+                    DetruireCarte(c);
+                    sourisSortiCarte();
                 }
             }
 
@@ -72,7 +73,7 @@ public class WatchTheWorldBurn : GenerationCarte, IPointerEnterHandler, IPointer
                 foreach (var c in aiCards)
                 {
                     if (c == null) continue;
-                    ai.DetruireCarte(c);
+                    DetruireCarte(c);
                 }
             }
 

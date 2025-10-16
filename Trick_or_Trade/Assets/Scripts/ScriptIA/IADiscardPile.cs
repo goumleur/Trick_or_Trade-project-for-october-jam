@@ -1,20 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic; // pour utiliser List<>
 
-public class IADiscardPile : MonoBehaviour
+public class IADiscardPile : DiscardsPiles
 {
-    Vector3 oldScale;
-    Vector3 oldPosition;
-    Vector3 oldAngle;
-    GameObject main;
-    public GameObject carteASauver;
-
-
-    public void CarteASauver(GameObject carte)
+    override public void CarteASauver(GameObject carte)
     {
         Invoke("PutDiscardCard", 0.01f);
     }
-    public void discardCard(GameObject carte)
+    override public void discardCard(GameObject carte)
     {
         Debug.Log("Début");
         carte.transform.localPosition = new Vector3(0f, 0f, 0f);
@@ -25,7 +18,7 @@ public class IADiscardPile : MonoBehaviour
     }
 
 
-    public void GetDicardCard()
+    override public void GetDicardCard()
     {
         main = GameObject.Find("IAHand");
         List<Transform> enfants = new List<Transform>();
@@ -46,7 +39,7 @@ public class IADiscardPile : MonoBehaviour
         AfficherDiscardOrDeck(enfants);
     }
 
-    public void PutDiscardCard()
+    override public void PutDiscardCard()
     {
         main.SetActive(true);
         GameObject.Find("IAHand").GetComponent<MainAi>().SauverCarte(carteASauver);

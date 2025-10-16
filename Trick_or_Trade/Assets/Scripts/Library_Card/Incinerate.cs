@@ -50,17 +50,16 @@ public class Incinerate : GenerationCarte, IPointerEnterHandler, IPointerExitHan
     public override void EffetCarte()
     {
         // Effect: "Give your opponent your entire hand." (excluding this card)
-        if (discarded == false && gameObject.transform.parent.name != "IAHand")
+        if (discarded == false)
         {
-            var deckIA = GameObject.Find("DeckIA");
-            if (deckIA != null)
+            if (deckAdvairsaire != null)
             {
                 // Destroy up to two top cards (index 0 twice)
                 for (int i = 0; i < 2; i++)
                 {
-                    if (deckIA.transform.childCount == 0) break;
-                    var top = deckIA.transform.GetChild(0).gameObject;
-                    if (top != null) Destroy(top);
+                    if (deckAdvairsaire.transform.childCount == 0) break;
+                    var top = deckAdvairsaire.transform.GetChild(0).gameObject;
+                    DetruireCarte(top);
                 }
             }
 

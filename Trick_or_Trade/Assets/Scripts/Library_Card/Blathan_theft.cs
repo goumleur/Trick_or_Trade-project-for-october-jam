@@ -47,14 +47,13 @@ public class Blathan_theft :GenerationCarte, IPointerEnterHandler, IPointerExitH
     public override void EffetCarte()
     {
         // Effect: "Draw a card from your opponent's deck." (take top card from DeckIA)
-        if (discarded == false && gameObject.transform.parent.name != "IAHand")
+        if (discarded == false)
         {
-            var deckIA = GameObject.Find("DeckIA");
-            if (deckIA != null && deckIA.transform.childCount > 0)
+            if (deckAdvairsaire != null && deckAdvairsaire.transform.childCount > 0)
             {
-                var topCard = deckIA.transform.GetChild(0).gameObject;
+                var topCard = deckAdvairsaire.transform.GetChild(0).gameObject;
                 // Give the card to the player
-                var player = GameObject.Find("Main Camera").GetComponent<main_joueur>();
+                var player = main.GetComponent<Mains>();
                 if (player != null && topCard != null)
                 {
                     player.PrendreCarte(topCard);

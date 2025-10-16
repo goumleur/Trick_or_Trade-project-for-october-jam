@@ -50,14 +50,13 @@ public class Blade_Of_Nightmare : GenerationCarte, IPointerEnterHandler, IPointe
     public override void EffetCarte()
     {
         // Effect: "Your opponent discards all trick cards from their hand." (cards tagged "trick")
-        if (discarded == false && gameObject.transform.parent.name != "IAHand")
+        if (discarded == false)
         {
-            var iaHand = GameObject.Find("IAHand");
-            if (iaHand != null)
+            if (mainAdvairsaire != null)
             {
                 // Collect trick cards to avoid modifying while iterating
                 var toDiscard = new System.Collections.Generic.List<GameObject>();
-                foreach (Transform child in iaHand.transform)
+                foreach (Transform child in mainAdvairsaire.transform)
                 {
                     if (child == null || child.gameObject == null) continue;
                     if (child.gameObject.tag == "trick") toDiscard.Add(child.gameObject);
@@ -65,23 +64,22 @@ public class Blade_Of_Nightmare : GenerationCarte, IPointerEnterHandler, IPointe
 
                 if (toDiscard.Count > 0)
                 {
-                    var iadiscard = GameObject.Find("DiscardPileIA");
-                    if (iadiscard != null)
+                    if (discardPileAdvairsaire != null)
                     {
-                        var iadp = iadiscard.GetComponent<IADiscardPile>();
+                        var iadp = discardPileAdvairsaire.GetComponent<DiscardsPiles>();
                         foreach (var card in toDiscard)
                         {
                             if (iadp != null) iadp.discardCard(card);
-                            else GameObject.Find("DiscardPileIA").GetComponent<IADiscardPile>().discardCard(card);
+                            else discardPileAdvairsaire.GetComponent<DiscardsPiles>().discardCard(card);
                         }
                     }
                     else
                     {
                         // Fallback: try to move cards to generic DiscardPile
-                        var dp = GameObject.Find("DiscardPile");
+                        var dp = discardPile;
                         if (dp != null)
                         {
-                            var dpc = dp.GetComponent<DiscardPile>();
+                            var dpc = dp.GetComponent<DiscardsPiles>();
                             foreach (var card in toDiscard)
                             {
                                 if (dpc != null) dpc.discardCard(card);

@@ -47,7 +47,7 @@ public class SpiderFromNowhere : GenerationCarte, IPointerEnterHandler, IPointer
     }
     public override void EffetCarte()
     {
-        if (discarded == false && gameObject.transform.parent.name != "IAHand" && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false)
+        if (discarded == false && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false)
         {
             discard();
             if (advairsaire == "main")

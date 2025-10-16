@@ -45,10 +45,10 @@ public class LuckyFind : GenerationCarte, IPointerEnterHandler, IPointerExitHand
     }
     public override void EffetCarte()
     {
-        if (discarded == false && gameObject.transform.parent.name != "IAHand" && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false && GameObject.Find("DiscardPile").transform.childCount > 0)
+        if (discarded == false && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false && discardPile.transform.childCount > 0)
         {
             GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser = nom_Carte;
-            GameObject.Find("DiscardPile").GetComponent<DiscardPile>().CarteASauver(GameObject.Find("DiscardPile").transform.GetChild(GameObject.Find("DiscardPile").transform.childCount - 1).gameObject);
+            discardPile.GetComponent<DiscardsPiles>().CarteASauver(discardPile.transform.GetChild(discardPile.transform.childCount - 1).gameObject);
             discard();
         }
     }

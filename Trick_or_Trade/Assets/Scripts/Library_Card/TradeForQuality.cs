@@ -45,9 +45,8 @@ public class TradeForQuality : GenerationCarte, IPointerEnterHandler, IPointerEx
     }
     public override void EffetCarte()
     {
-        if(discarded == false && gameObject.transform.parent.name != "IAHand" && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false)
+        if(discarded == false && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false)
         {
-            Debug.Log("Marche");
             discard();
             GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire = true;
             GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser = nom_Carte;

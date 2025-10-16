@@ -44,13 +44,13 @@ public class Spill : GenerationCarte, IPointerEnterHandler, IPointerExitHandler,
     }
     public override void EffetCarte()
     {
-        if(discarded == false && gameObject.transform.parent.name != "IAHand" && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false)
+        if(discarded == false && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false)
         {
             discard();
             for(int i = 0; i < 4; i++)
             {
-                GameObject carteADiscard = GameObject.Find("DeckIA").transform.GetChild(0).gameObject;
-                GameObject.Find("DiscardPileIA").GetComponent<IADiscardPile>().discardCard(carteADiscard);
+                GameObject carteADiscard = deckAdvairsaire.transform.GetChild(0).gameObject;
+                discardPileAdvairsaire.GetComponent<DiscardsPiles>().discardCard(carteADiscard);
             }
         }
     }

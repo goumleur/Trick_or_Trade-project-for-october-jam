@@ -4,12 +4,9 @@ using TMPro;
 using Unity.VisualScripting;
 using System.Linq;
 
-public class MainAi : MonoBehaviour
+public class MainAi : Mains
 {
     //private List<GameObject> cartesDisponibles = new List<GameObject>(); 
-    private List<GameObject> cartesDisponibles = new List<GameObject>(); // Le "deck" complet (1 à 40)
-    public List<GameObject> cartesMain = new List<GameObject>(); // Les cartes actuellement en main
-    public Transform zoneMain;    
     public SpriteRenderer spriteRenderer; // Assurez-vous d'assigner ce champ dans l'éditeur Unity
     public Sprite nouveauSprite; // Le nouveau sprite à afficher
     public Sprite ImageFacedown; // Le sprite à afficher face cachée (si nécessaire)
@@ -31,7 +28,7 @@ public class MainAi : MonoBehaviour
         cartesDisponibles.Clear();
         for (int i = 0; i < 40; i++)
         {
-            GameObject carteModel = GameObject.Find("Candy"); // Trouver le model de carte
+            GameObject carteModel = GameObject.Find("PropShield"); // Trouver le model de carte
             Transform parent = GameObject.Find("DeckIA").transform; // Trouver le deck pour le futur enfant
             GameObject carteClone = Instantiate(carteModel, parent, true); // cloner le model & set le parent de la carte (a deck)
             carteClone.name = (i + 40).ToString(); // Set le nom au numéro de génération
@@ -41,7 +38,7 @@ public class MainAi : MonoBehaviour
         Debug.Log("Deck initialisé avec " + cartesDisponibles.Count + " cartes.");
         gameObject.GetComponent<MainAi>().spriteChanger();
     }
-    public void modifierCarte(Transform carteAModifier, GameObject carteResultant)
+    override public void modifierCarte(Transform carteAModifier, GameObject carteResultant)
     {
         GameObject carteModel = carteResultant; // Trouver le model de carte
         Transform parent = GameObject.Find("DeckIA").transform; // Trouver le deck pour le futur enfant
@@ -78,7 +75,7 @@ public class MainAi : MonoBehaviour
     }
 
     //  Pioche une seule carte pendant le jeu
-    public void PigerUneCarte()
+    override public void PigerUneCarte()
     {
         GameObject carte = GameObject.Find("DeckIA").transform.GetChild(0).gameObject;
         cartesDisponibles.Remove(carte); // Enleve dans la list
@@ -87,12 +84,12 @@ public class MainAi : MonoBehaviour
         carte.transform.SetParent(parent.transform, worldPositionStays: true); // Set le parent de la carte a main
         OrganiserLaMain();
     }
-    public void DiscardFait(GameObject card)
+    override public void DiscardFait(GameObject card)
     {
         cartesMain.Remove(card);
         OrganiserLaMain();
     }
-    public void PrendreCarte(GameObject carte)
+    override public void PrendreCarte(GameObject carte)
     {
         cartesMain.Add(carte);
         GameObject parent = GameObject.Find("IAHand"); // Chercher l'objet main
@@ -102,20 +99,20 @@ public class MainAi : MonoBehaviour
         OrganiserLaMain(); // Appeller la fonction pour organiser la main a 0,1 sec apres pour éviter les erreur
 
     }
-    public void DetruireCarte(GameObject carte)
+    override public void DetruireCarte(GameObject carte)
     {
         cartesMain.Remove(carte);
         Destroy(carte);
         OrganiserLaMain();
     }
-    public void SauverCarte(GameObject cartesASauver)
+    override public void SauverCarte(GameObject cartesASauver)
     {
         cartesMain.Add(cartesASauver);
         GameObject parent = GameObject.Find("IAHand"); // Chercher l'objet main
         cartesASauver.transform.SetParent(parent.transform, worldPositionStays: true);
         Invoke("OrganiserLaMain", 0.1f); // Appeller la fonction pour organiser la main a 0,1 sec apres pour éviter les erreur
     }
-    public void OrganiserLaMain()
+    override public void OrganiserLaMain()
     {
 
         float angleTotal = 30f;

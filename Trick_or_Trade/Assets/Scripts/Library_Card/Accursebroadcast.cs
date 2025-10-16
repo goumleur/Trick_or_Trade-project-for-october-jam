@@ -50,9 +50,9 @@ public class AccurseBroadcast : GenerationCarte, IPointerEnterHandler, IPointerE
     }
     public override void EffetCarte()
     {
-        if (discarded == false && gameObject.transform.parent.name != "IAHand" && GameObject.Find("DiscardPile").transform.childCount > 0)
+        if (discarded == false && discardPile.transform.childCount > 0)
         {
-            GameObject.Find("DiscardPile").GetComponent<DiscardPile>().GetDicardCard();
+            discardPile.GetComponent<DiscardsPiles>().GetDicardCard();
             discard();
         }
     }

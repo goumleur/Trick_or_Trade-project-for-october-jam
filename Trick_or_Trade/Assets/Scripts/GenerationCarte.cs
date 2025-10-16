@@ -1,10 +1,23 @@
 using UnityEngine;
 using TMPro;
+using System.Collections;
+using System.Threading.Tasks;
+using System.Threading;
 
 
 public class GenerationCarte : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    protected GameObject main;
+    protected GameObject discardPile;
+    protected GameObject deck;
+    protected GameObject mainAdvairsaire;
+    protected GameObject discardPileAdvairsaire;
+    protected GameObject deckAdvairsaire;
+    bool coroutineEnAction = false;
+
+
+
     [SerializeField] public string nom_Carte = "Carte Inconnue";
     [SerializeField] protected string description_Carte = "Aucune description";
 
@@ -15,7 +28,7 @@ public class GenerationCarte : MonoBehaviour
     public void discard()
     {
         discarded = true;
-        GameObject.Find("DiscardPile").GetComponent<DiscardPile>().discardCard(gameObject);
+        discardPile.GetComponent<DiscardsPiles>().discardCard(gameObject);
     }
 
     public string advairsaire;
@@ -36,30 +49,12 @@ public class GenerationCarte : MonoBehaviour
     protected void VolerCarteAdvairsaire(GameObject carteViser) // Permet de changer la carte du joueur
     {
         EnleverCarteZoom();
-        if (advairsaire == "main")
-        {
-            GameObject.Find("Main Camera").GetComponent<main_joueur>().PrendreCarte(carteViser);
-        }
-        else if (advairsaire == "IAHand")
-        {
-            Debug.Log("Activer");
-            GameObject.Find("IAHand").GetComponent<MainAi>().PrendreCarte(carteViser);
-        }
+        mainAdvairsaire.GetComponent<Mains>().PrendreCarte(carteViser);
         TrouverAdvairsaire();
     }
-    protected void DetruireCarteAdvairsaire(GameObject carteViser) // Permet de détruire UNIQUEMENT la carte
+    protected void DetruireCarte(GameObject carteViser) // Permet de détruire UNIQUEMENT la carte
     {
-        Debug.Log(advairsaire);
-        if (advairsaire == "main")
-        {
-            Debug.Log("Option 1");
-            GameObject.Find("IAHand").GetComponent<MainAi>().DetruireCarte(carteViser);
-        }
-        else if (advairsaire == "IAHand")
-        {
-            Debug.Log("Option 2");
-            GameObject.Find("Main Camera").GetComponent<main_joueur>().DetruireCarte(carteViser);
-        }
+        main.GetComponent<Mains>().DetruireCarte(carteViser);
     }
     protected void AfficherCarteZoom() // Zoom la carte sur de la main
     {
@@ -101,6 +96,7 @@ public class GenerationCarte : MonoBehaviour
         {
             advairsaire = "main";
         }
+        JoueurOuIA();
     }
     protected void clearMemoire() // Reset la memoire de MemoireDesCartes
     {
@@ -109,129 +105,15 @@ public class GenerationCarte : MonoBehaviour
         GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire = false;
         GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaVoler = false;
         GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetVoler = null;
+        GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().multipleDiscard = 0;
     }
 
     protected void click() // Condition auquelle toute les cartes peuvent etre affecter (discard, detruire, sauver, voler, trade(trade c 2 Vavoler))
     {
-        if (discarded == true && GameObject.Find("DiscardPile").GetComponent<DiscardPile>().carteASauver == null) // Pour chercher une carte de la discard pile, ne pas mettre de condition dadans
+        if(coroutineEnAction == false)
         {
-            GameObject.Find("DiscardPile").GetComponent<DiscardPile>().CarteASauver(gameObject); // Fonction qui va chercher la carte
+            IsProtected();
         }
-
-        else if (gameObject.transform.parent.name == "Deck" && GameObject.Find("Deck").GetComponent<deck_joueur>().regarder == false) // Si un joueur regarde le deck pour prendre une carte
-        {
-            if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser == "TradeForQuality") // Si TradeForQuality est utiliser (Apres la partie inférieur)
-            {
-                GameObject.Find("Deck").GetComponent<deck_joueur>().ChercherCarte(gameObject); // Va chercher la carte selectionner par le joueur
-                GameObject.Find("Deck").GetComponent<deck_joueur>().PutCarteAVoir(); // Remet le deck a sa place pour reprendre sa main
-                clearMemoire(); // Clear la memoire
-            }
-        }
-
-        else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaVoler == true) // VaVoler sert a faire en sort qu'une carte change de main, peut etre utiliser pour les échange
-        {
-            if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser == "PressureTrade") // Si PressureTrade est utiliser
-            {
-                if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetVoler == null && advairsaire == "main") // Si le joueur n'a pas choisi la carte de l'opposant
-                {
-                    VolerCarteAdvairsaire(gameObject); // Execute VolerCarteAdvairsaire qui prend sa carte
-                    GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetVoler = gameObject; //set objet voler dans la memoire
-                }
-
-                else if (advairsaire == "IAHand" && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetVoler != null) // Si le joueur a choisi la carte de l'opposant
-                {
-                    VolerCarteAdvairsaire(gameObject); // Execute VolerCarteAdvairsaire qui donne sa carte a l'opposant
-                    clearMemoire(); // Clear la memoire
-                }
-            }
-
-            else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser == "BlindTrade") // si BlindTrade est utiliser
-            {
-                if (advairsaire == "IAHand") // Si l'advairsaire est l'IA
-                {
-                    VolerCarteAdvairsaire(gameObject); // Execute VolerCarteAdvairsaire qui donne sa carte a l'opposant
-                    int carteRetour = Random.Range(0, GameObject.Find("IAHand").transform.childCount); // TEMPORAIRE !!! Selectionner la carte que l'ia revois aléatoirement
-                    VolerCarteAdvairsaire(GameObject.Find("IAHand").transform.GetChild(carteRetour).gameObject); // Execute VolerCarteAdvairsaire qui prend sa carte
-                    clearMemoire(); // Reset la memoire
-                }
-            }
-        }
-
-        else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == true) // VaDetruire sert a sois détruire une carte ou de la discard
-        {
-            if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser == "Questionable technique") // Est true si Questionable technique est utiliser
-            {
-                if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().choixEntreDiscardOuDestroy == "Destroy") // Est true si la carte choisi doit etre détruit
-                {
-                    if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser.GetComponent<QuestionableTechnique>().advairsaire == advairsaire) // Si l'adversaire est le meme que la carte activer
-                    {
-                        DetruireCarteAdvairsaire(gameObject); // Fonction pour détruire la carte
-                        GameObject.Find("Canvas").transform.GetChild(1).GetComponent<ChoisirDestroy>().DesactiverInteractionBouton();
-                        GameObject.Find("Canvas").transform.GetChild(2).GetComponent<ChoisirDiscard>().DesactiverInteractionBouton();
-                        clearMemoire(); // Reset la mémoire de MemoireDesCartes
-                    }
-                }
-
-                else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().choixEntreDiscardOuDestroy == "Discard") // Est true si la carte choisi doit etre discard
-                {
-                    if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser.GetComponent<QuestionableTechnique>().advairsaire == advairsaire)// Si l'adversaire est le meme que la carte activer
-                    {
-                        discard(); // Fonction pour discard la carte
-                        GameObject.Find("Canvas").transform.GetChild(1).GetComponent<ChoisirDestroy>().DesactiverInteractionBouton();
-                        GameObject.Find("Canvas").transform.GetChild(2).GetComponent<ChoisirDiscard>().DesactiverInteractionBouton();
-                        clearMemoire(); // Reset la mémoire de MemoireDesCartes
-                    }
-                }
-            }
-
-            else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser == "TradeForNumber") // Est true si TradeForNumber est utiliser
-            {
-                if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser.GetComponent<TradeForNumber>().advairsaire == advairsaire) // Si l'adversaire est le meme que la carte activer
-                {
-                    discard(); // Fonction pour discard la carte
-                    clearMemoire(); // Fonction pour clear la mémoire de MemoireDesCartes
-                    for (int i = 0; i < 3; i++) // Se repete 3 fois
-                    {
-                        GameObject.Find("Main Camera").GetComponent<main_joueur>().PigerUneCarte(); // Le joueur pige une carte
-                    }
-                }
-            }
-
-            else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser == "TradeForQuality") // Est true si TradeForQuality est utiliser
-            {
-                if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser.GetComponent<TradeForQuality>().advairsaire == advairsaire) // Si l'adversaire est le meme que la carte activer
-                {
-                    if (gameObject.transform.parent.name == "main") // Si le parent est main
-                    {
-                        discard(); // Fonction pour discard
-                        GameObject.Find("Deck").GetComponent<deck_joueur>().VoirCarteDessus(5); // Fonction pour voir les 5 cartes dessus ton deck
-                        GameObject.Find("Deck").GetComponent<deck_joueur>().regarder = false; // Desactiver la variable regarder pour choisir une carte au lieu de juste regarder
-                        // Suite dans gameObject.transform.parent.name == "Deck"
-                    }
-                }
-            }
-
-            else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser == "HastySearch" || GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser == "ZombieHand") // Si HastySearch ou ZombieHand est utiliser
-            {
-                if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().multipleDiscard == 0) // Si c'est la premiere carte discard
-                {
-                    discard(); // Fonction pour discard
-                    GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().multipleDiscard = 1; // Ajoute 1 au compteur de fois utiliser
-                }
-                else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().multipleDiscard == 1)// Si c'Est la deuxieme carte discard
-                {
-                    discard();// Fonction pour discard
-                    GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().multipleDiscard = 0; // remet a 0 le compteur de fois utiliser
-                    clearMemoire(); // Fonction pour clear la memoire
-                }
-            }
-        }
-        else
-        {
-            EffetCarte(); // Effet de la carte utilliser
-        }
-
-        // NOTE : ici il y a toute les if qui sont dans toutes les cartes, sois pour volé ou detruire ou discard, etc. IMPORTANT D'UTILISER LA MEMOIRE ET DE LA CLEAR
     }
 
     protected void sourisSurCarte() // Permet de scale la carte
@@ -244,7 +126,7 @@ public class GenerationCarte : MonoBehaviour
         {
             AfficherCarteZoom();
         }
-        else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == true)
+        else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == true && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser != "prop Bow")
         {
             AfficherCarteZoom();
         }
@@ -253,6 +135,10 @@ public class GenerationCarte : MonoBehaviour
             AfficherCarteZoom();
         }
         else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser == "BlindTrade" && advairsaire == "IAHand")
+        {
+            AfficherCarteZoom();
+        }
+        else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser == "prop Bow" && advairsaire == "IAHand")
         {
             AfficherCarteZoom();
         }
@@ -267,7 +153,7 @@ public class GenerationCarte : MonoBehaviour
         {
             EnleverCarteZoom();
         }
-        else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == true)
+        else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == true && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser != "prop Bow")
         {
             EnleverCarteZoom();
         }
@@ -279,6 +165,213 @@ public class GenerationCarte : MonoBehaviour
         {
             EnleverCarteZoom();
         }
+        else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser == "prop Bow" && advairsaire == "IAHand")
+        {
+            EnleverCarteZoom();
+        }
+    }
+    protected void JoueurOuIA()
+    {
+        if (advairsaire == "IAHand")
+        {
+            main = GameObject.Find("main");
+            discardPile = GameObject.Find("DiscardPile");
+            deck = GameObject.Find("Deck");
+
+            mainAdvairsaire = GameObject.Find("IAHand");
+            discardPileAdvairsaire = GameObject.Find("DiscardPileIA");
+            deckAdvairsaire = GameObject.Find("DeckIA");
+        }
+        else if (advairsaire == "main")
+        {
+            main = GameObject.Find("IAHand");
+            discardPile = GameObject.Find("DiscardPileIA");
+            deck = GameObject.Find("DeckIA");
+
+            mainAdvairsaire = GameObject.Find("main");
+            discardPileAdvairsaire = GameObject.Find("DiscardPile");
+            deckAdvairsaire = GameObject.Find("Deck");
+        }
+    }
+    protected void IsProtected()
+    {
+        for (int i = 0; i < mainAdvairsaire.transform.childCount; i++)
+        {
+            if (mainAdvairsaire.transform.GetChild(i).GetComponent<GenerationCarte>().nom_Carte == "Prop Shield")
+            {
+                if (mainAdvairsaire.name == "main")
+                {
+                    GameObject.Find("Canvas").transform.GetChild(4).GetComponent<BoutonDeposerCarteDessusDeck>().ActiverInteractionBouton();
+                    GameObject.Find("Canvas").transform.GetChild(5).GetComponent<BoutonDeposerCarteDessusDeck>().ActiverInteractionBouton();
+
+                    StartCoroutine(MyCoroutine(mainAdvairsaire.transform.GetChild(i)));
+                    return;
+                }
+                else
+                {
+                    GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().protect = true;
+                    discardPileAdvairsaire.GetComponent<DiscardsPiles>().discardCard(mainAdvairsaire.transform.GetChild(i).gameObject);
+                    Continuer();
+                    return;
+                }
+            }
+            Continuer();
+        }
+    }
+
+    IEnumerator MyCoroutine(Transform card)
+    {
+        coroutineEnAction = true;
+        yield return new WaitUntil(() => GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().boutonUse == true);
+        coroutineEnAction = false;
+        if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().protect == true)
+        {
+            discardPile.GetComponent<DiscardsPiles>().discardCard(card.gameObject);
+        }
+        GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().boutonUse = false;
+        Continuer();
+    }
+    
+    void Continuer()
+    {
+        if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().protect == true)
+        {
+            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().protect = false;
+            Debug.Log("Protéger");
+            discard();
+        }
+        else
+        {
+            // if (discarded == true && discardPile.GetComponent<DiscardsPiles>().carteASauver == null) // Pour chercher une carte de la discard pile, ne pas mettre de condition dadans
+            // {
+            //     discardPile.GetComponent<DiscardsPiles>().CarteASauver(gameObject); // Fonction qui va chercher la carte
+            // }
+
+            if (gameObject.transform.parent.name == "Deck" && GameObject.Find("Deck").GetComponent<deck_joueur>().regarder == false) // Si un joueur regarde le deck pour prendre une carte
+            {
+                if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser == "TradeForQuality") // Si TradeForQuality est utiliser (Apres la partie inférieur)
+                {
+                    GameObject.Find("Deck").GetComponent<deck_joueur>().ChercherCarte(gameObject); // Va chercher la carte selectionner par le joueur
+                    GameObject.Find("Deck").GetComponent<deck_joueur>().PutCarteAVoir(); // Remet le deck a sa place pour reprendre sa main
+                    clearMemoire(); // Clear la memoire
+                }
+            }
+
+            else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaVoler == true) // VaVoler sert a faire en sort qu'une carte change de main, peut etre utiliser pour les échange
+            {
+                if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser == "PressureTrade") // Si PressureTrade est utiliser
+                {
+                    if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetVoler == null && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser.GetComponent<GenerationCarte>().advairsaire != advairsaire) // Si le joueur n'a pas choisi la carte de l'opposant
+                    {
+                        VolerCarteAdvairsaire(gameObject); // Execute VolerCarteAdvairsaire qui prend sa carte
+                        GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetVoler = gameObject; //set objet voler dans la memoire
+                    }
+
+                    else if (advairsaire == "IAHand" && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetVoler != null && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser.GetComponent<GenerationCarte>().advairsaire == advairsaire) // Si le joueur a choisi la carte de l'opposant
+                    {
+                        VolerCarteAdvairsaire(gameObject); // Execute VolerCarteAdvairsaire qui donne sa carte a l'opposant
+                        clearMemoire(); // Clear la memoire
+                    }
+                }
+
+                else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser == "BlindTrade") // si BlindTrade est utiliser
+                {
+                    if (advairsaire == "IAHand") // Si l'advairsaire est l'IA
+                    {
+                        VolerCarteAdvairsaire(gameObject); // Execute VolerCarteAdvairsaire qui donne sa carte a l'opposant
+                        int carteRetour = Random.Range(0, GameObject.Find("IAHand").transform.childCount); // TEMPORAIRE !!! Selectionner la carte que l'ia revois aléatoirement
+                        VolerCarteAdvairsaire(GameObject.Find("IAHand").transform.GetChild(carteRetour).gameObject); // Execute VolerCarteAdvairsaire qui prend sa carte
+                        clearMemoire(); // Reset la memoire
+                    }
+                }
+            }
+
+            else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == true) // VaDetruire sert a sois détruire une carte ou de la discard
+            {
+                if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser == "Questionable technique") // Est true si Questionable technique est utiliser
+                {
+                    if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().choixEntreDiscardOuDestroy == "Destroy") // Est true si la carte choisi doit etre détruit
+                    {
+                        if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser.GetComponent<GenerationCarte>().advairsaire == advairsaire) // Si l'adversaire est le meme que la carte activer
+                        {
+                            DetruireCarte(gameObject); // Fonction pour détruire la carte
+                            GameObject.Find("Canvas").transform.GetChild(1).GetComponent<ChoisirDestroy>().DesactiverInteractionBouton();
+                            GameObject.Find("Canvas").transform.GetChild(2).GetComponent<ChoisirDiscard>().DesactiverInteractionBouton();
+                            clearMemoire(); // Reset la mémoire de MemoireDesCartes
+                        }
+                    }
+
+                    else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().choixEntreDiscardOuDestroy == "Discard") // Est true si la carte choisi doit etre discard
+                    {
+                        if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser.GetComponent<GenerationCarte>().advairsaire == advairsaire)// Si l'adversaire est le meme que la carte activer
+                        {
+                            discard(); // Fonction pour discard la carte
+                            GameObject.Find("Canvas").transform.GetChild(1).GetComponent<ChoisirDestroy>().DesactiverInteractionBouton();
+                            GameObject.Find("Canvas").transform.GetChild(2).GetComponent<ChoisirDiscard>().DesactiverInteractionBouton();
+                            clearMemoire(); // Reset la mémoire de MemoireDesCartes
+                        }
+                    }
+                }
+
+                else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser == "TradeForNumber") // Est true si TradeForNumber est utiliser
+                {
+                    if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser.GetComponent<GenerationCarte>().advairsaire == advairsaire) // Si l'adversaire est le meme que la carte activer
+                    {
+                        discard(); // Fonction pour discard la carte
+                        clearMemoire(); // Fonction pour clear la mémoire de MemoireDesCartes
+                        for (int i = 0; i < 3; i++) // Se repete 3 fois
+                        {
+                            main.GetComponent<Mains>().PigerUneCarte(); // Le joueur pige une carte
+                        }
+                    }
+                }
+
+                else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser == "TradeForQuality") // Est true si TradeForQuality est utiliser
+                {
+                    if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser.GetComponent<GenerationCarte>().advairsaire == advairsaire) // Si l'adversaire est le meme que la carte activer
+                    {
+                        if (gameObject.transform.parent.name == "main") // Si le parent est main
+                        {
+                            discard(); // Fonction pour discard
+                            GameObject.Find("Deck").GetComponent<deck_joueur>().VoirCarteDessus(5); // Fonction pour voir les 5 cartes dessus ton deck
+                            GameObject.Find("Deck").GetComponent<deck_joueur>().regarder = false; // Desactiver la variable regarder pour choisir une carte au lieu de juste regarder
+                            // Suite dans gameObject.transform.parent.name == "Deck"
+                        }
+                    }
+                }
+
+                else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser == "HastySearch" || GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser == "ZombieHand") // Si HastySearch ou ZombieHand est utiliser (Si le joueur doit discard + d'une carte)
+                {
+                    if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().multipleDiscard == 0) // Si c'est la premiere carte discard
+                    {
+                        discard(); // Fonction pour discard
+                        GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().multipleDiscard = 1; // Ajoute 1 au compteur de fois utiliser
+                    }
+                    else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().multipleDiscard == 1)// Si c'Est la deuxieme carte discard
+                    {
+                        discard();// Fonction pour discard
+                        GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().multipleDiscard = 0; // remet a 0 le compteur de fois utiliser
+                        clearMemoire(); // Fonction pour clear la memoire
+                    }
+                }
+                else if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser == "prop Bow")
+                {
+                    Debug.Log(GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser.GetComponent<GenerationCarte>().advairsaire == gameObject.transform.parent.name);
+                    if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser.GetComponent<GenerationCarte>().advairsaire == gameObject.transform.parent.name)
+                    {
+                        discard();
+                        clearMemoire();
+                    }
+                }
+            }
+            else if (main.name == "main")
+            {
+                EffetCarte(); // Effet de la carte utilliser
+            }
+
+            // NOTE : ici il y a toute les if qui sont dans toutes les cartes, sois pour volé ou detruire ou discard, etc. IMPORTANT D'UTILISER LA MEMOIRE ET DE LA CLEAR
+        }
+        
     }
 }
 

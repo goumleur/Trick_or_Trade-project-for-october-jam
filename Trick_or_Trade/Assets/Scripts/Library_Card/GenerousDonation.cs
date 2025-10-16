@@ -50,10 +50,10 @@ public class GenerousDonation : GenerationCarte, IPointerEnterHandler, IPointerE
     public override void EffetCarte()
     {
         // Effect: "Give your opponent your entire hand." (excluding this card)
-        if (discarded == false && gameObject.transform.parent.name != "IAHand")
+        if (discarded == false)
         {
-            var player = GameObject.Find("Main Camera").GetComponent<main_joueur>();
-            var ai = GameObject.Find("IAHand").GetComponent<MainAi>();
+            var player = main.GetComponent<Mains>();
+            var ai = mainAdvairsaire.GetComponent<Mains>();
 
             if (player != null && ai != null)
             {

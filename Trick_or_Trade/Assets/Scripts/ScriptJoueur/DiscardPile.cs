@@ -1,32 +1,24 @@
 using UnityEngine;
 using System.Collections.Generic; // pour utiliser List<>
 
-public class DiscardPile : MonoBehaviour
+public class DiscardPile : DiscardsPiles
 {
-    Vector3 oldScale;
-    Vector3 oldPosition;
-    Vector3 oldAngle;
-    GameObject main;
-    public GameObject carteASauver;
-
-
-    public void CarteASauver(GameObject carte)
+    override public void CarteASauver(GameObject carte)
     {
         carteASauver = carte;
         Invoke("PutDiscardCard", 0.01f);
     }
-    public void discardCard(GameObject carte)
+    override public void discardCard(GameObject carte)
     {
-        Debug.Log("Début");
         carte.transform.localPosition = new Vector3(0f, 0f, 0f);
         carte.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
         carte.transform.localScale = new Vector3(1f, 1f, 1f);
         carte.transform.SetParent(GameObject.Find("DiscardPile").transform, false);
-        GameObject.Find("Main Camera").GetComponent<main_joueur>().DiscardFait(carte);
+        GameObject.Find("main").GetComponent<main_joueur>().DiscardFait(carte);
     }
 
 
-    public void GetDicardCard()
+    override public void GetDicardCard()
     {
         main = GameObject.Find("main");
         List<Transform> enfants = new List<Transform>();
@@ -47,8 +39,9 @@ public class DiscardPile : MonoBehaviour
         AfficherDiscardOrDeck(enfants);
     }
 
-    public void PutDiscardCard()
+    override public void PutDiscardCard()
     {
+        main = GameObject.Find("main");
         if (GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser == "LuckyFind")
         {
             GameObject parent = GameObject.Find("Deck"); // Chercher l'objet main
@@ -57,7 +50,7 @@ public class DiscardPile : MonoBehaviour
         else
         {
             main.SetActive(true);
-            GameObject.Find("Main Camera").GetComponent<main_joueur>().SauverCarte(carteASauver);
+            GameObject.Find("main").GetComponent<main_joueur>().SauverCarte(carteASauver);
             Transform discard = GameObject.Find("DiscardPile").transform;
             discard.transform.SetPositionAndRotation(oldPosition, Quaternion.Euler(oldAngle));
             discard.transform.localScale = oldScale;

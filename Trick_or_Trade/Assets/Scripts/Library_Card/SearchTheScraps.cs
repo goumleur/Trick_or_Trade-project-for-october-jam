@@ -45,15 +45,14 @@ public class SearchTheScraps : GenerationCarte, IPointerEnterHandler, IPointerEx
     }
     public override void EffetCarte()
     {
-        if(discarded == false && gameObject.transform.parent.name != "IAHand" && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false)
+        if(discarded == false && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false)
         {
-            Debug.Log("Marche");
             discard();
-            foreach(Transform card in GameObject.Find("DiscardPile").transform)
+            foreach(Transform card in discardPile.transform)
             {
                 if(card.GetComponent<GenerationCarte>().nom_Carte == "Candy")
                 {
-                    GameObject.Find("DiscardPile").GetComponent<DiscardPile>().CarteASauver(card.gameObject);
+                    discardPile.GetComponent<DiscardsPiles>().CarteASauver(card.gameObject);
                 }
             }
         }

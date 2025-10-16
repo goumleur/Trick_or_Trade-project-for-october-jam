@@ -41,14 +41,17 @@ public class QuestionableTechnique : GenerationCarte, IPointerEnterHandler, IPoi
 
     public override void EffetCarte()
     {
-        if(discarded == false && gameObject.transform.parent.name != "IAHand" && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false)
+        if(discarded == false && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false)
         {
             discard();
             GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire = true;
             GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser = gameObject;
             GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser = nom_Carte;
-            GameObject.Find("Canvas").transform.GetChild(1).GetComponent<ChoisirDestroy>().ActiverInteractionBouton();
-            GameObject.Find("Canvas").transform.GetChild(2).GetComponent<ChoisirDiscard>().ActiverInteractionBouton();
+            if(gameObject.transform.parent.name != "IAHand")
+            {
+                GameObject.Find("Canvas").transform.GetChild(1).GetComponent<ChoisirDestroy>().ActiverInteractionBouton();
+                GameObject.Find("Canvas").transform.GetChild(2).GetComponent<ChoisirDiscard>().ActiverInteractionBouton();
+            }
         }
     }
 

@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic; // pour utiliser List<>
 
-public class deck_joueur : MonoBehaviour
+public class deck_joueur : Decks
 {
 
 
@@ -12,7 +12,7 @@ public class deck_joueur : MonoBehaviour
     Vector3 oldAngle;
 
     public bool regarder = false;
-    public void melanger_deck()
+    override public void melanger_deck()
     {
         // Stocker les enfants dans une liste
         List<Transform> enfants = new List<Transform>();
@@ -38,7 +38,7 @@ public class deck_joueur : MonoBehaviour
         Debug.Log("Deck Mélanger");
     }
 
-    public void ChercherCarte(GameObject carte)
+    override public void ChercherCarte(GameObject carte)
     {
         if(regarder == false)
         {
@@ -46,7 +46,7 @@ public class deck_joueur : MonoBehaviour
             Invoke("PutDiscardCard", 0.01f);
         }
     }
-    public void GetDeckCard()
+    override public void GetDeckCard()
     {
         regarder = false;
         main = GameObject.Find("main");
@@ -68,7 +68,7 @@ public class deck_joueur : MonoBehaviour
         AfficherDiscardOrDeck(enfants);
     }
 
-    public void PutDiscardCard()
+    override public void PutDiscardCard()
     {
         main.SetActive(true);
         GameObject.Find("Main Camera").GetComponent<main_joueur>().SauverCarte(carteAChercher);
@@ -86,7 +86,7 @@ public class deck_joueur : MonoBehaviour
 
     }
 
-    public void VoirCarteDessus(int nombreCarteAVoir)
+    override public void VoirCarteDessus(int nombreCarteAVoir)
     {
         main = GameObject.Find("main");
         main = GameObject.Find("main");
@@ -112,7 +112,7 @@ public class deck_joueur : MonoBehaviour
         }
 
     }
-    public void PutCarteAVoir()
+    override public void PutCarteAVoir()
     {
         main.SetActive(true);
         Transform discard = GameObject.Find("Deck").transform;

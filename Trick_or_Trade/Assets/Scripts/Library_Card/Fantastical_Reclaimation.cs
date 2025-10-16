@@ -48,26 +48,24 @@ public class Fantastical_Reclaimation : GenerationCarte, IPointerEnterHandler, I
     public override void EffetCarte()
     {
         // Effect: "Shuffle your discard pile into your deck."
-        if (discarded == false && gameObject.transform.parent.name != "IAHand")
+        if (discarded == false)
         {
-            var discardRoot = GameObject.Find("DiscardPile");
-            var deckRoot = GameObject.Find("Deck");
-            if (discardRoot != null && deckRoot != null && discardRoot.transform.childCount > 0)
+            if (discardPile != null && deck != null && discardPile.transform.childCount > 0)
             {
                 // Move all cards from discard to deck
                 // Collect first because moving while iterating can cause issues
                 var toMove = new System.Collections.Generic.List<Transform>();
-                foreach (Transform child in discardRoot.transform)
+                foreach (Transform child in discardPile.transform)
                 {
                     toMove.Add(child);
                 }
                 foreach (var t in toMove)
                 {
-                    t.SetParent(deckRoot.transform, worldPositionStays: true);
+                    t.SetParent(deck.transform, worldPositionStays: true);
                 }
 
                 // Shuffle the deck using existing deck_joueur method
-                var deckComp = deckRoot.GetComponent<deck_joueur>();
+                var deckComp = deck.GetComponent<Decks>();
                 if (deckComp != null) deckComp.melanger_deck();
             }
 

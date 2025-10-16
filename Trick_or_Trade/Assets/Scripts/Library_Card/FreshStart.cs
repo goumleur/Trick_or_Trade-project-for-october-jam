@@ -50,10 +50,10 @@ public class FreshStart : GenerationCarte, IPointerEnterHandler, IPointerExitHan
     public override void EffetCarte()
     {
         // Effect: "Discard your hand and draw 4 cards."
-        if (discarded == false && gameObject.transform.parent.name != "IAHand")
+        if (discarded == false)
         {
             // Reference to player's hand manager
-            var player = GameObject.Find("Main Camera").GetComponent<main_joueur>();
+            var player = main.GetComponent<Mains>();
 
             // Copy current hand because we'll modify the collection while iterating
             var hand = new System.Collections.Generic.List<GameObject>(player.cartesMain);
@@ -64,14 +64,13 @@ public class FreshStart : GenerationCarte, IPointerEnterHandler, IPointerExitHan
                 // Skip nulls just in case
                 if (card == null) continue;
                 // Use player's discard pile
-                GameObject.Find("DiscardPile").GetComponent<DiscardPile>().discardCard(card);
+                discardPile.GetComponent<DiscardsPiles>().discardCard(card);
             }
 
             // After discarding, draw 4 cards (use PigerUneCarte)
             for (int i = 0; i < 4; i++)
             {
                 // If the deck is empty, break
-                var deck = GameObject.Find("Deck");
                 if (deck == null || deck.transform.childCount == 0) break;
                 player.PigerUneCarte();
             }

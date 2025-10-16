@@ -44,7 +44,7 @@ public class BlindTrade : GenerationCarte, IPointerEnterHandler, IPointerExitHan
     }
     public override void EffetCarte()
     {
-        if (discarded == false && gameObject.transform.parent.name != "IAHand" && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false)
+        if (discarded == false && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false)
         {
             discard();
             GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaVoler = true;

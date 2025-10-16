@@ -50,7 +50,7 @@ public class TheOlSwitcheroo :GenerationCarte, IPointerEnterHandler, IPointerExi
     public override void EffetCarte()
     {
         // Effect: "Exchange hands with your opponent." - swap all cards between main and IAHand
-        if (discarded == false && gameObject.transform.parent.name != "IAHand")
+        if (discarded == false)
         {
             var player = GameObject.Find("Main Camera").GetComponent<main_joueur>();
             var ai = GameObject.Find("IAHand").GetComponent<MainAi>();

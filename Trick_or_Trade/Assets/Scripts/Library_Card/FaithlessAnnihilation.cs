@@ -47,29 +47,27 @@ public class FaithlessAnnihilation : GenerationCarte, IPointerEnterHandler, IPoi
     }
     public override void EffetCarte()
     {
-        if (discarded == false && gameObject.transform.parent.name != "IAHand")
+        if (discarded == false)
         {
             // Destroy top 10 cards from player's Deck
-            var deck = GameObject.Find("Deck");
             if (deck != null)
             {
                 for (int i = 0; i < 10; i++)
                 {
                     if (deck.transform.childCount == 0) break;
                     var top = deck.transform.GetChild(0).gameObject;
-                    if (top != null) Destroy(top);
+                    if (top != null) DetruireCarte(top);
                 }
             }
 
             // Destroy top 10 cards from AI deck
-            var deckIA = GameObject.Find("DeckIA");
-            if (deckIA != null)
+            if (deckAdvairsaire != null)
             {
                 for (int i = 0; i < 10; i++)
                 {
-                    if (deckIA.transform.childCount == 0) break;
-                    var top = deckIA.transform.GetChild(0).gameObject;
-                    if (top != null) Destroy(top);
+                    if (deckAdvairsaire.transform.childCount == 0) break;
+                    var top = deckAdvairsaire.transform.GetChild(0).gameObject;
+                    if (top != null) DetruireCarte(top);
                 }
             }
 
