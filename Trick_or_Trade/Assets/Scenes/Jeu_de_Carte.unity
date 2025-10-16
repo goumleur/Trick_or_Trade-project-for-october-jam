@@ -3454,8 +3454,14 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &1025116726
+
+--- !u!1 &1047913476 stripped
 GameObject:
+  m_CorrespondingSourceObject: {fileID: 413202932058238505, guid: 2abd286b2ea94d647b736ad0ab1b65d4, type: 3}
+  m_PrefabInstance: {fileID: 277018351}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1047913480
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
