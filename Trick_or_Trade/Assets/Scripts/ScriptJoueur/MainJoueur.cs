@@ -18,16 +18,9 @@ public class main_joueur : Mains
     //  Remplit le deck avec toutes les cartes possibles
     void InitialiserDeck()
     {
-        cartesDisponibles.Clear();
-        GameObject carteModelC = GameObject.Find("Candy"); // Trouver le model de carte
-        Transform parentC = GameObject.Find("Deck").transform; // Trouver le deck pour le futur enfant
-        GameObject carteCloneC = Instantiate(carteModelC, parentC, true); // cloner le model & set le parent de la carte (a deck)
-        carteCloneC.name = 40.ToString(); // Set le nom au numéro de génération
-        cartesDisponibles.Add(carteCloneC); // Ajouter la carte dans la liste
-        carteCloneC.tag = "Untagged";
         for (int i = 0; i < 39; i++)
         {
-            GameObject carteModel = GameObject.Find("ToxicSpike"); // Trouver le model de carte
+            GameObject carteModel = GameObject.Find(GameObject.Find("Memoire").GetComponent<InitierDeck>().Deck1(i)); // Trouver le model de carte
             Transform parent = GameObject.Find("Deck").transform; // Trouver le deck pour le futur enfant
             GameObject carteClone = Instantiate(carteModel, parent, true); // cloner le model & set le parent de la carte (a deck)
             carteClone.name = i.ToString(); // Set le nom au numéro de génération
