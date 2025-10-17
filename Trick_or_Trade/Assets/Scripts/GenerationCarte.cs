@@ -727,7 +727,7 @@ public class GenerationCarte : MonoBehaviour
             }
             else if(main.name == "IAHand")
             {
-                
+                Debug.Log($"L'ordi a choisi : {nom_Carte}");
             }
             
 
