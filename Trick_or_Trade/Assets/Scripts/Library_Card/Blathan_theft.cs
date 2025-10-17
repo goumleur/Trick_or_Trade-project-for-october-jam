@@ -58,6 +58,7 @@ public class Blathan_theft :GenerationCarte, IPointerEnterHandler, IPointerExitH
                 if (player != null && topCard != null)
                 {
                     player.PrendreCarte(topCard);
+                    
                 }
             }
 

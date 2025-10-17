@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEditor.VersionControl;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 public class TheOlSwitcheroo :GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
@@ -66,22 +67,36 @@ public class TheOlSwitcheroo :GenerationCarte, IPointerEnterHandler, IPointerExi
                 player.cartesMain.Clear();
                 ai.cartesMain.Clear();
 
-                // Reparent AI cards to player hand
-                foreach (var c in aiCards)
-                {
-                    if (c == null) continue;
-                    c.transform.SetParent(GameObject.Find("main").transform, worldPositionStays: true);
-                    player.cartesMain.Add(c);
-                    ai.cartesMain.Remove(c);
-                }
-
+                List<GameObject> mainCarte = new List<GameObject>();
                 // Reparent player cards to AI hand
                 foreach (var c in playerCards)
                 {
                     if (c == null) continue;
-                    c.transform.SetParent(GameObject.Find("IAHand").transform, worldPositionStays: true);
-                    ai.cartesMain.Add(c);
-                    player.cartesMain.Remove(c);
+                    mainCarte.Add(c);
+                }
+                List<GameObject> mainIACarte = new List<GameObject>();
+                foreach (var c in aiCards)
+                {
+                    if (c == null) continue;
+                    mainIACarte.Add(c);
+                }
+                Debug.Log(mainCarte.Count);
+                Debug.Log(mainIACarte.Count);
+
+
+                // Reparent AI cards to player hand
+                foreach (var c in mainIACarte)
+                {
+                    if (c == null) continue;
+                    c.GetComponent<GenerationCarte>().VolerCarteAdvairsaire(c);
+                }
+
+                // Reparent player cards to AI hand
+                foreach (var c in mainCarte)
+                {
+                    if (c == null) continue;
+                    c.GetComponent<GenerationCarte>().VolerCarteAdvairsaire(c);
+
                 }
 
                 // Reorganize both hands

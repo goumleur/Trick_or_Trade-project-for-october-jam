@@ -1,19 +1,23 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 using UnityEngine.EventSystems;
 
-public class DecayingCorpse : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
+public class Infest : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         CreerLaCarte();
     }
     override public void CreerLaCarte()
     {
-        nom_Carte = "Decaying Corpse";
-        description_Carte = "When this card enters an opponents hand, transform the 2 first tricks in that players hand into maggots.";
+        nom_Carte = "Mummify";
+        description_Carte = "When a candy card is put into an opponent's discard, activate this to destroy it.";
+        backRound = Resources.Load<Sprite>("Assets/Images/CardFrames/CommonEnemyTrick.png");
+        illustration = Resources.Load<Sprite>("Assets/Images/CardIcon/ImageRecycle.jpg");
         afficher_carte();
-        typeCard = "Trick";
+        typeCard = "Action";
         if(gameObject.tag == "Untagged")
         {
             Invoke("TrouverAdvairsaire",0.001f);
@@ -47,25 +51,26 @@ public class DecayingCorpse : GenerationCarte, IPointerEnterHandler, IPointerExi
     }
     public override void EffetCarte()
     {
-        if (discarded == false && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false && mainAdvairsaire.transform.childCount > 0)
+        if (discarded == false && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false && mainAdvairsaire.transform.childCount > 2)
         {
             discard();
             List<Transform> enfants = new List<Transform>();
-            for (int y = 0; y < mainAdvairsaire.transform.childCount; y++)
+            for (int y = 0; y < deckAdvairsaire.transform.childCount; y++)
             {
-                enfants.Add(mainAdvairsaire.transform.GetChild(y));
+                enfants.Add(deckAdvairsaire.transform.GetChild(y));
             }
-            int nbATransformer = 2;
-            for (int y = 0; y < mainAdvairsaire.transform.childCount; y++)
+            int nbATransformer = 3;
+            for (int y = 0; y < deckAdvairsaire.transform.childCount; y++)
             {
                 if( nbATransformer == 0)
                 {
                     return;
                 }
-                if(enfants[y].GetComponent<GenerationCarte>().typeCard == "Trick")
+                if(enfants[y].GetComponent<GenerationCarte>().nom_Carte == "Candy")
                 {
-                    mainAdvairsaire.GetComponent<Mains>().modifierCarteMain(enfants[y], GameObject.Find("Maggots"), mainAdvairsaire);
+                    mainAdvairsaire.GetComponent<Mains>().modifierCarte(enfants[y], GameObject.Find("Maggots"));
                     nbATransformer -= 1;
+                    Debug.Log(enfants[y].name);
                 }
             }
         }

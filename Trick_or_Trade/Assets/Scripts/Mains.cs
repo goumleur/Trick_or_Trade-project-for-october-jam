@@ -16,5 +16,5 @@ public class Mains : MonoBehaviour
     virtual public void SauverCarte(GameObject cartesASauver) { }
     virtual public void OrganiserLaMain() { }
     virtual public void PigerMainDeDepart() { }
-    virtual public void modifierCarteMain(Transform carteAModifier, GameObject carteResultant) {}
+    virtual public void modifierCarteMain(Transform carteAModifier, GameObject carteResultant, GameObject parent) {}
 }

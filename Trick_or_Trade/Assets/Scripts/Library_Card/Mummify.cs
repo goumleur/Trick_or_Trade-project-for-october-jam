@@ -1,19 +1,17 @@
 using UnityEngine;
-using TMPro;
-using UnityEditor.VersionControl;
 using UnityEngine.EventSystems;
 
-
-public class AccurseBroadcast : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
+public class Mummify : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         CreerLaCarte();
     }
     override public void CreerLaCarte()
     {
-        nom_Carte = "Accurse broadcast";
-        description_Carte = "When a candy put into discard, activate this to destroy it.";
+        nom_Carte = "Mummify";
+        description_Carte = "When a candy card is put into an opponent's discard, activate this to destroy it.";
         backRound = Resources.Load<Sprite>("Assets/Images/CardFrames/CommonEnemyTrick.png");
         illustration = Resources.Load<Sprite>("Assets/Images/CardIcon/ImageRecycle.jpg");
         afficher_carte();
@@ -53,4 +51,3 @@ public class AccurseBroadcast : GenerationCarte, IPointerEnterHandler, IPointerE
     {
     }
 }
-

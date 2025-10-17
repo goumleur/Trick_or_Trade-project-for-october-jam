@@ -19,7 +19,7 @@ public class main_joueur : Mains
     void InitialiserDeck()
     {
         cartesDisponibles.Clear();
-        GameObject carteModelC = GameObject.Find("FlareToLife"); // Trouver le model de carte
+        GameObject carteModelC = GameObject.Find("Candy"); // Trouver le model de carte
         Transform parentC = GameObject.Find("Deck").transform; // Trouver le deck pour le futur enfant
         GameObject carteCloneC = Instantiate(carteModelC, parentC, true); // cloner le model & set le parent de la carte (a deck)
         carteCloneC.name = 40.ToString(); // Set le nom au numéro de génération
@@ -27,7 +27,7 @@ public class main_joueur : Mains
         carteCloneC.tag = "Untagged";
         for (int i = 0; i < 39; i++)
         {
-            GameObject carteModel = GameObject.Find("Recycle"); // Trouver le model de carte
+            GameObject carteModel = GameObject.Find("ToxicSpike"); // Trouver le model de carte
             Transform parent = GameObject.Find("Deck").transform; // Trouver le deck pour le futur enfant
             GameObject carteClone = Instantiate(carteModel, parent, true); // cloner le model & set le parent de la carte (a deck)
             carteClone.name = i.ToString(); // Set le nom au numéro de génération
@@ -48,15 +48,17 @@ public class main_joueur : Mains
         Destroy(carteAModifier.gameObject);
         carteClone.tag = "Untagged";
     }
-    override public void modifierCarteMain(Transform carteAModifier, GameObject carteResultant)
+    override public void modifierCarteMain(Transform carteAModifier, GameObject carteResultant, GameObject parent)
     {
         Debug.Log("Marche");
         GameObject carteModel = carteResultant; // Trouver le model de carte
-        Transform parent = GameObject.Find("main").transform; // Trouver le deck pour le futur enfant
-        GameObject carteClone = Instantiate(carteModel, parent, true); // cloner le model & set le parent de la carte (a deck)
+        GameObject carteClone = Instantiate(carteModel, parent.transform, true); // cloner le model & set le parent de la carte (a deck)
         carteClone.name = carteAModifier.name; // Set le nom au numéro de génération
-        cartesMain.Add(carteClone); // Ajouter la carte dans la liste
-        cartesMain.Remove(carteAModifier.gameObject);
+        if(parent.name == "main")
+        {
+            cartesMain.Add(carteClone); // Ajouter la carte dans la liste
+            cartesMain.Remove(carteAModifier.gameObject);
+        }  
         Destroy(carteAModifier.gameObject);
         carteClone.tag = "Untagged";
         OrganiserLaMain();

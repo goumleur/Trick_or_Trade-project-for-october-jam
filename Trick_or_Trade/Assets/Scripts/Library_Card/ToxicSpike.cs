@@ -1,10 +1,8 @@
+using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
-using UnityEditor.VersionControl;
 using UnityEngine.EventSystems;
 
-
-public class AccurseBroadcast : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
+public class ToxicSpike : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
     void Start()
     {
@@ -12,12 +10,10 @@ public class AccurseBroadcast : GenerationCarte, IPointerEnterHandler, IPointerE
     }
     override public void CreerLaCarte()
     {
-        nom_Carte = "Accurse broadcast";
-        description_Carte = "When a candy put into discard, activate this to destroy it.";
-        backRound = Resources.Load<Sprite>("Assets/Images/CardFrames/CommonEnemyTrick.png");
-        illustration = Resources.Load<Sprite>("Assets/Images/CardIcon/ImageRecycle.jpg");
+        nom_Carte = "Toxic Spike";
+        description_Carte = "Transform a random card in your opponents hand into a maggot.";
         afficher_carte();
-        typeCard = "Trick";
+        typeCard = "Action";
         if(gameObject.tag == "Untagged")
         {
             Invoke("TrouverAdvairsaire",0.001f);
@@ -51,6 +47,12 @@ public class AccurseBroadcast : GenerationCarte, IPointerEnterHandler, IPointerE
     }
     public override void EffetCarte()
     {
+        if (discarded == false && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false && mainAdvairsaire.transform.childCount > 0)
+        {
+            discard();
+            int nbAleatoire = Random.Range(0, mainAdvairsaire.transform.childCount);
+            mainAdvairsaire.GetComponent<Mains>().modifierCarteMain(mainAdvairsaire.transform.GetChild(nbAleatoire), GameObject.Find("Maggots"), mainAdvairsaire);
+            Debug.Log(mainAdvairsaire.transform.GetChild(nbAleatoire));
+        }
     }
 }
-
