@@ -2078,7 +2078,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cartesDisponibles: []
-  cartesMain: []
+  cartesMain:
+  - {fileID: 7091665775047433860}
   zoneMain: {fileID: 0}
 --- !u!1 &506796073 stripped
 GameObject:
