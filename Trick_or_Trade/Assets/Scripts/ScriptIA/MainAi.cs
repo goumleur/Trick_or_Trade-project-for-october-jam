@@ -28,7 +28,7 @@ public class MainAi : Mains
         cartesDisponibles.Clear();
         for (int i = 0; i < 40; i++)
         {
-            GameObject carteModel = GameObject.Find("Candy"); // Trouver le model de carte
+            GameObject carteModel = GameObject.Find(GameObject.Find("Memoire").GetComponent<InitierDeck>().Deck1(i)); // Trouver le model de carte
             Transform parent = GameObject.Find("DeckIA").transform; // Trouver le deck pour le futur enfant
             GameObject carteClone = Instantiate(carteModel, parent, true); // cloner le model & set le parent de la carte (a deck)
             carteClone.name = (i + 40).ToString(); // Set le nom au numéro de génération
