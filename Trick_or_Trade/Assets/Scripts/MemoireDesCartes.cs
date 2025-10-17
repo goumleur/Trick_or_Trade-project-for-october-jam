@@ -11,7 +11,7 @@ public class MemoireDesCartes : MonoBehaviour
     public GameObject objetVoler; // Carte qui a été voler
     public bool protect = false;
     public bool boutonUse = false;
-
+    public bool coroutineEnAction = false;
     public void EstProtected()
     {
         protect = true;

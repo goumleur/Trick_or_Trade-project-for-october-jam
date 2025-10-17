@@ -47,23 +47,23 @@ public class ZombieHand : GenerationCarte, IPointerEnterHandler, IPointerExitHan
     }
     public override void EffetCarte()
     {
-        if (discarded == false && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false)
+        if (discarded == false && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false && mainAdvairsaire.transform.childCount > 0)
         {
             VolerCarteAdvairsaire(gameObject);
             if (advairsaire == "main")
             {
                 for (int i = 0; i < 2; i++)
                 {
-                    int nbAleatoire = Random.Range(0, GameObject.Find("IAHand").transform.childCount);
-                    GameObject carteDiscard = GameObject.Find("IAHand").transform.GetChild(nbAleatoire).gameObject;
-                    GameObject.Find("DiscardPileIA").transform.GetComponent<IADiscardPile>().discardCard(carteDiscard);
+                    GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire = true;
+                    GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser = nom_Carte;
+                    GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser = gameObject;
                 }
             }
             else if(advairsaire == "IAHand")
             {
-                GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire = true;
-                GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser = nom_Carte;
-                GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser = gameObject;
+                int nbAleatoire = Random.Range(0, GameObject.Find("IAHand").transform.childCount);
+                GameObject carteDiscard = GameObject.Find("IAHand").transform.GetChild(nbAleatoire).gameObject;
+                GameObject.Find("DiscardPileIA").transform.GetComponent<IADiscardPile>().discardCard(carteDiscard);
             }
         }
     }

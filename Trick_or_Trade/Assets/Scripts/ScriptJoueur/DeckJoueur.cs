@@ -101,6 +101,7 @@ public class deck_joueur : Decks
 
         for (int i = 0; i < nombreCarteAVoir; i++)
         {
+            if (gameObject.transform.childCount == 0) break;
             carteAVoir.Add(gameObject.transform.GetChild(i));
             gameObject.transform.GetChild(i).localScale = new Vector3(1f, 1f, 1f);
         }

@@ -47,7 +47,7 @@ public class TurnManager : MonoBehaviour
         playsLeft = playsPerTurn;
         Debug.Log("TurnManager: AI turn started. Plays left = " + playsLeft);
         if (aiController == null)
-            aiController = GameObject.FindObjectOfType<AIController>();
+            //aiController = GameObject.FindObjectOfType<AIController>();
         if (aiController != null)
         {
             aiController.playsPerTurn = playsPerTurn;

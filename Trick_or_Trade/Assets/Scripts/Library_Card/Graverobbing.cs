@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class TradeForQuality : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
+public class Graverobbing : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
     void Start()
     {
@@ -9,8 +9,10 @@ public class TradeForQuality : GenerationCarte, IPointerEnterHandler, IPointerEx
     }
     override public void CreerLaCarte()
     {
-        nom_Carte = "TradeForQuality";
-        description_Carte = "Discard a card then look at the top 5 cards of your deck and put one in your hand. Put the rest on the bottom.";
+        nom_Carte = "Graverobbing";
+        description_Carte = "Put a card from any discard pile into your hand.";
+        backRound = Resources.Load<Sprite>("Assets/Images/CardFrames/CommonEnemyTrick.png");
+        illustration = Resources.Load<Sprite>("Assets/Images/CardIcon/ImageRecycle.jpg");
         afficher_carte();
         typeCard = "Action";
         if(gameObject.tag == "Untagged")
@@ -46,12 +48,11 @@ public class TradeForQuality : GenerationCarte, IPointerEnterHandler, IPointerEx
     }
     public override void EffetCarte()
     {
-        if(discarded == false && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false && main.transform.childCount > 1)
+        if (discarded == false && discardPileAdvairsaire.transform.childCount > 0)
         {
-            discard();
-            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire = true;
             GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser = nom_Carte;
-            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser = gameObject;
+            discard();
+            discardPileAdvairsaire.GetComponent<DiscardsPiles>().GetDicardCard();
         }
     }
 }

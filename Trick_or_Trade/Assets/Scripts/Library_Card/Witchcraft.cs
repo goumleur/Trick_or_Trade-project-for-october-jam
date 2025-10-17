@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class TradeForQuality : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
+public class Witchcraft : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
     void Start()
     {
@@ -9,8 +9,10 @@ public class TradeForQuality : GenerationCarte, IPointerEnterHandler, IPointerEx
     }
     override public void CreerLaCarte()
     {
-        nom_Carte = "TradeForQuality";
-        description_Carte = "Discard a card then look at the top 5 cards of your deck and put one in your hand. Put the rest on the bottom.";
+        nom_Carte = "Witchcraft";
+        description_Carte = "Look at the top 3 card of your deck. Destroy one, discard one, and put one in your hand.";
+        backRound = Resources.Load<Sprite>("Assets/Images/CardFrames/CommonEnemyTrick.png");
+        illustration = Resources.Load<Sprite>("Assets/Images/CardIcon/ImageRecycle.jpg");
         afficher_carte();
         typeCard = "Action";
         if(gameObject.tag == "Untagged")
@@ -46,12 +48,28 @@ public class TradeForQuality : GenerationCarte, IPointerEnterHandler, IPointerEx
     }
     public override void EffetCarte()
     {
-        if(discarded == false && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false && main.transform.childCount > 1)
+        if (advairsaire == "IAHand" && main.transform.childCount > 2)
         {
             discard();
-            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire = true;
+            MainVirtuelle(null);
             GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser = nom_Carte;
-            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser = gameObject;
+            
+        }
+        else if(advairsaire == "main")
+        {
+            discardPile.GetComponent<DiscardsPiles>().discardCard(gameObject);
+            for(int i = 0; i < 3; i++)
+            {
+                main.GetComponent<Mains>().PigerUneCarte();
+                if (i == 1)
+                {
+                    main.transform.GetChild(i).GetComponent<GenerationCarte>().discard();
+                }
+                else if(i == 2)
+                {
+                    DetruireCarte(main.transform.GetChild(i).gameObject);
+                }
+            }
         }
     }
 }

@@ -47,7 +47,7 @@ public class DecayingCorpse : GenerationCarte, IPointerEnterHandler, IPointerExi
     }
     public override void EffetCarte()
     {
-        if (discarded == false && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false)
+        if (discarded == false && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false && mainAdvairsaire.transform.childCount > 0)
         {
             discard();
             List<Transform> enfants = new List<Transform>();

@@ -48,7 +48,7 @@ public class Blathan_theft :GenerationCarte, IPointerEnterHandler, IPointerExitH
     public override void EffetCarte()
     {
         // Effect: "Draw a card from your opponent's deck." (take top card from DeckIA)
-        if (discarded == false)
+        if (discarded == false && deckAdvairsaire.transform.childCount > 0)
         {
             if (deckAdvairsaire != null && deckAdvairsaire.transform.childCount > 0)
             {

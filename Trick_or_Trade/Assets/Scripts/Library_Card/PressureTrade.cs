@@ -46,7 +46,7 @@ public class PressureTrade : GenerationCarte, IPointerEnterHandler, IPointerExit
     }
     public override void EffetCarte()
     {
-        if(discarded == false && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false)
+        if(discarded == false && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false && main.transform.childCount > 1 && mainAdvairsaire.transform.childCount > 0)
         {
             discard();
             GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaVoler = true;

@@ -42,7 +42,7 @@ public class QuestionableTechnique : GenerationCarte, IPointerEnterHandler, IPoi
 
     public override void EffetCarte()
     {
-        if(discarded == false && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false)
+        if(discarded == false && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false && main.transform.childCount > 1)
         {
             discard();
             GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire = true;

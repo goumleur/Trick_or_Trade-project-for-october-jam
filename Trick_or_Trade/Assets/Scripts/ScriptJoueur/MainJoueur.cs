@@ -10,7 +10,6 @@ public class main_joueur : Mains
     //private List<GameObject> cartesDisponibles = new List<GameObject>(); 
     void Start()
     {
-
         InitialiserDeck();
         GameObject.Find("Deck").GetComponent<deck_joueur>().melanger_deck();
         Invoke("PigerMainDeDepart", 0.01f);
@@ -20,9 +19,15 @@ public class main_joueur : Mains
     void InitialiserDeck()
     {
         cartesDisponibles.Clear();
-        for (int i = 0; i < 40; i++)
+        GameObject carteModelC = GameObject.Find("FlareToLife"); // Trouver le model de carte
+        Transform parentC = GameObject.Find("Deck").transform; // Trouver le deck pour le futur enfant
+        GameObject carteCloneC = Instantiate(carteModelC, parentC, true); // cloner le model & set le parent de la carte (a deck)
+        carteCloneC.name = 40.ToString(); // Set le nom au numéro de génération
+        cartesDisponibles.Add(carteCloneC); // Ajouter la carte dans la liste
+        carteCloneC.tag = "Untagged";
+        for (int i = 0; i < 39; i++)
         {
-            GameObject carteModel = GameObject.Find("DecayingCorpse"); // Trouver le model de carte
+            GameObject carteModel = GameObject.Find("Recycle"); // Trouver le model de carte
             Transform parent = GameObject.Find("Deck").transform; // Trouver le deck pour le futur enfant
             GameObject carteClone = Instantiate(carteModel, parent, true); // cloner le model & set le parent de la carte (a deck)
             carteClone.name = i.ToString(); // Set le nom au numéro de génération
@@ -78,7 +83,6 @@ public class main_joueur : Mains
             Invoke("OrganiserLaMain", 0.1f); // Appeller la fonction pour organiser la main a 0,1 sec apres pour éviter les erreur
         }
 
-        Debug.Log("Main de départ tirée (" + cartesMain.Count + " cartes)");
     }
 
     //  Pioche une seule carte pendant le jeu
@@ -89,6 +93,16 @@ public class main_joueur : Mains
         cartesMain.Add(carte);
         GameObject parent = GameObject.Find("main"); // Chercher l'objet main
         carte.transform.SetParent(parent.transform, worldPositionStays: true); // Set le parent de la carte a main
+        OrganiserLaMain();
+    }
+    public void PigerUneCarteVirtuelle(GameObject mainVirtuel)
+    {
+        GameObject carte = GameObject.Find("Deck").transform.GetChild(0).gameObject;
+        cartesDisponibles.Remove(carte); // Enleve dans la list
+        cartesMain.Add(carte);
+        GameObject parent = mainVirtuel; // Chercher l'objet main
+        carte.transform.SetParent(parent.transform, worldPositionStays: true); // Set le parent de la carte a main
+        //carte.transform.localPosition = new Vector3(0f, 0f, 0f);
         OrganiserLaMain();
     }
     override public void DiscardFait(GameObject card)

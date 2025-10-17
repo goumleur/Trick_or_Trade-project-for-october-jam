@@ -52,7 +52,7 @@ public class PropBow : GenerationCarte, IPointerEnterHandler, IPointerExitHandle
 
     public override void EffetCarte()
     {
-        if (discarded == false)
+        if (discarded == false && mainAdvairsaire.transform.childCount > 0)
         {
             discard();
             GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire = true;

@@ -46,9 +46,6 @@ public class HastySabotage : GenerationCarte, IPointerEnterHandler, IPointerExit
     }
     public override void EffetCarte()
     {
-        if(discarded == false && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false)
-        {
-            discard();
-        }
+        
     }
 }

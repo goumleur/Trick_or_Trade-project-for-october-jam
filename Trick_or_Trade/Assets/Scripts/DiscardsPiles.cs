@@ -11,5 +11,5 @@ public class DiscardsPiles : MonoBehaviour
     virtual public void discardCard(GameObject carte) { }
     virtual public void GetDicardCard() { }
     virtual public void PutDiscardCard() { }
-    
+    virtual public void PutDiscardCardSteal() {}
 }

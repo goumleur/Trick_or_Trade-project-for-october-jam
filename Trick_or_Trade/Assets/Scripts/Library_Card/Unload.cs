@@ -1,7 +1,8 @@
+using System.Net;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class LightEmUp : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
+public class Unload : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
     void Start()
     {
@@ -9,10 +10,8 @@ public class LightEmUp : GenerationCarte, IPointerEnterHandler, IPointerExitHand
     }
     override public void CreerLaCarte()
     {
-        nom_Carte = "Light 'em up";
-        description_Carte = "Destroy a random card in your opponent's hand.";
-        backRound = Resources.Load<Sprite>("Assets/Images/CardFrames/CommonEnemyTrick.png");
-        illustration = Resources.Load<Sprite>("Assets/Images/CardIcon/ImageRecycle.jpg");
+        nom_Carte = "Unload";
+        description_Carte = "Give your opponent 3 cards from your hand.";
         afficher_carte();
         typeCard = "Action";
         if(gameObject.tag == "Untagged")
@@ -48,26 +47,25 @@ public class LightEmUp : GenerationCarte, IPointerEnterHandler, IPointerExitHand
     }
     public override void EffetCarte()
     {
-        // Effect: "Destroy a random card in your opponent's hand." (choose random child of IAHand)
-        if (discarded == false && mainAdvairsaire.transform.childCount > 0)
+        if (discarded == false)
         {
-            if (mainAdvairsaire != null)
+            if (advairsaire == "main")
             {
-                int count = mainAdvairsaire.transform.childCount;
-                int idx = Random.Range(0, count);
-                var target = mainAdvairsaire.transform.GetChild(idx).gameObject;
-                if (target != null)
+                for (int i = 0; i < 3; i++)
                 {
-                    var ai = mainAdvairsaire.GetComponent<MainAi>();
-                    if (ai != null) DetruireCarte(target);
-                    else Destroy(target);
+                    if (main.transform.childCount == 0) break;
+                    int nbAleatoire = Random.Range(0, GameObject.Find("IAHand").transform.childCount);
+                    GameObject carteDiscard = GameObject.Find("IAHand").transform.GetChild(nbAleatoire).gameObject;
+                    mainAdvairsaire.transform.GetComponent<Mains>().PrendreCarte(carteDiscard);
                 }
             }
-
-            // discard this card after effect
+            else if (advairsaire == "IAHand")
+            {
+                GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaVoler = true;
+                GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser = nom_Carte;
+                GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser = gameObject;
+            }
             discard();
         }
     }
 }
-
-

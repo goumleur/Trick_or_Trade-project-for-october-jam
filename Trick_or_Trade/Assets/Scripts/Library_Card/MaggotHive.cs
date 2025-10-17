@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class TradeForQuality : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
+public class MaggotHive : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
     void Start()
     {
@@ -9,10 +9,12 @@ public class TradeForQuality : GenerationCarte, IPointerEnterHandler, IPointerEx
     }
     override public void CreerLaCarte()
     {
-        nom_Carte = "TradeForQuality";
-        description_Carte = "Discard a card then look at the top 5 cards of your deck and put one in your hand. Put the rest on the bottom.";
+        nom_Carte = "Maggot Hive";
+        description_Carte = "If an opponent would remove a card from a discard pile, activate this to turn all card in that discard pile into maggots";
+        backRound = Resources.Load<Sprite>("Assets/Images/CardFrames/CommonEnemyTrick.png");
+        illustration = Resources.Load<Sprite>("Assets/Images/CardIcon/ImageRecycle.jpg");
         afficher_carte();
-        typeCard = "Action";
+        typeCard = "Trick";
         if(gameObject.tag == "Untagged")
         {
             Invoke("TrouverAdvairsaire",0.001f);
@@ -46,12 +48,5 @@ public class TradeForQuality : GenerationCarte, IPointerEnterHandler, IPointerEx
     }
     public override void EffetCarte()
     {
-        if(discarded == false && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false && main.transform.childCount > 1)
-        {
-            discard();
-            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire = true;
-            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser = nom_Carte;
-            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser = gameObject;
-        }
     }
 }

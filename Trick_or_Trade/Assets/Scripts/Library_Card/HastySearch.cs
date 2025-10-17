@@ -46,7 +46,7 @@ public class HastySearch : GenerationCarte, IPointerEnterHandler, IPointerExitHa
     }
     public override void EffetCarte()
     {
-        if(discarded == false && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false)
+        if(discarded == false && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false && main.transform.childCount > 2)
         {
             discard();
             GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire = true;
@@ -55,6 +55,7 @@ public class HastySearch : GenerationCarte, IPointerEnterHandler, IPointerExitHa
 
             for (int i = 0; i < 2; i++)
             {
+                if (deck.transform.childCount == 0) break;
                 main.GetComponent<Mains>().PigerUneCarte();
             }
         }

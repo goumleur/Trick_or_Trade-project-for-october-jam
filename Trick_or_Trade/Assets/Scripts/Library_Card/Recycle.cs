@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEditor.VersionControl;
 using UnityEngine;
@@ -54,8 +55,9 @@ public class CarteDeJeu : GenerationCarte, IPointerEnterHandler, IPointerExitHan
     {
         if (discarded == false && discardPile.transform.childCount > 0)
         {
-            discardPile.GetComponent<DiscardsPiles>().GetDicardCard();
+            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser = nom_Carte;
             discard();
+            discardPile.GetComponent<DiscardsPiles>().GetDicardCard();
         }
     }
 }

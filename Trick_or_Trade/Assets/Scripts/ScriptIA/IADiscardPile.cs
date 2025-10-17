@@ -5,10 +5,19 @@ public class IADiscardPile : DiscardsPiles
 {
     override public void CarteASauver(GameObject carte)
     {
-        Invoke("PutDiscardCard", 0.01f);
+        carteASauver = carte;
+        if(carte.transform.parent.name == "DiscardPileIA")
+        {
+            Invoke("PutDiscardCard", 0.01f);
+        }
+        else if(carte.transform.parent.name == "DiscardPile")
+        {
+            Invoke("PutDiscardCardSteal", 0.01f);
+        }
     }
     override public void discardCard(GameObject carte)
     {
+        carte.GetComponent<GenerationCarte>().discarded = true;
         Debug.Log("Début");
         carte.transform.localPosition = new Vector3(0f, 0f, 0f);
         carte.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
@@ -17,10 +26,9 @@ public class IADiscardPile : DiscardsPiles
         GameObject.Find("IAHand").GetComponent<MainAi>().DiscardFait(carte);
     }
 
-
     override public void GetDicardCard()
     {
-        main = GameObject.Find("IAHand");
+        main = GameObject.Find("main");
         List<Transform> enfants = new List<Transform>();
         Transform discard = GameObject.Find("DiscardPileIA").transform;
 
@@ -55,6 +63,22 @@ public class IADiscardPile : DiscardsPiles
         }
         carteASauver = null;
 
+    }
+    override public void PutDiscardCardSteal()
+    {
+        main.SetActive(true);
+        GameObject.Find("main").GetComponent<MainAi>().SauverCarte(carteASauver);
+        Transform discard = GameObject.Find("DiscardPile").transform;
+        discard.transform.SetPositionAndRotation(oldPosition, Quaternion.Euler(oldAngle));
+        discard.transform.localScale = oldScale;
+        foreach (Transform enfant in discard)
+        {
+            Transform cFrameCarte = enfant.GetComponent<Transform>();
+            GameObject discardPile = GameObject.Find("DiscardPileIA");
+            Transform cFrameDiscardPile = discardPile.GetComponent<Transform>();
+            cFrameCarte.transform.SetPositionAndRotation(cFrameDiscardPile.transform.position, Quaternion.Euler(0f, 90f, 0f));
+        }
+        carteASauver = null;
     }
     public void AfficherDiscardOrDeck(List<Transform> carteAAfficher)
     {

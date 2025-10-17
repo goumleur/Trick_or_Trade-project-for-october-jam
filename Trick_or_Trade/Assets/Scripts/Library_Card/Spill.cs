@@ -50,6 +50,7 @@ public class Spill : GenerationCarte, IPointerEnterHandler, IPointerExitHandler,
             discard();
             for(int i = 0; i < 4; i++)
             {
+                if (deckAdvairsaire.transform.childCount == 0) break;
                 GameObject carteADiscard = deckAdvairsaire.transform.GetChild(0).gameObject;
                 discardPileAdvairsaire.GetComponent<DiscardsPiles>().discardCard(carteADiscard);
             }

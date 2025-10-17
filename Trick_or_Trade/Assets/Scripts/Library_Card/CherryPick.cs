@@ -1,7 +1,9 @@
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class TradeForQuality : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
+public class CherryPick : GenerationCarte, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
     void Start()
     {
@@ -9,13 +11,13 @@ public class TradeForQuality : GenerationCarte, IPointerEnterHandler, IPointerEx
     }
     override public void CreerLaCarte()
     {
-        nom_Carte = "TradeForQuality";
-        description_Carte = "Discard a card then look at the top 5 cards of your deck and put one in your hand. Put the rest on the bottom.";
+        nom_Carte = "Cherry Pick";
+        description_Carte = "Discard a candy card. Choose any card in your deck to add to your hand.";
         afficher_carte();
         typeCard = "Action";
-        if(gameObject.tag == "Untagged")
+        if (gameObject.tag == "Untagged")
         {
-            Invoke("TrouverAdvairsaire",0.001f);
+            Invoke("TrouverAdvairsaire", 0.001f);
         }
     }
 
@@ -46,12 +48,28 @@ public class TradeForQuality : GenerationCarte, IPointerEnterHandler, IPointerEx
     }
     public override void EffetCarte()
     {
-        if(discarded == false && GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire == false && main.transform.childCount > 1)
+        if (advairsaire == "IAHand" && main.transform.childCount > 2)
         {
             discard();
-            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().vaDetruire = true;
+            MainVirtuelle(null);
             GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().nomCarteUtiliser = nom_Carte;
-            GameObject.Find("Memoire").GetComponent<MemoireDesCartes>().objetUtiliser = gameObject;
+            
         }
+        else if(advairsaire == "main")
+        {
+            for(int i = 0; i < 3; i++)
+            {
+                main.GetComponent<Mains>().PigerUneCarte();
+                if(i < 2)
+                {
+                    main.transform.GetChild(i).GetComponent<GenerationCarte>().discard();
+                }
+            }
+            discardPile.GetComponent<DiscardsPiles>().discardCard(gameObject);
+        }
+        
     }
+
+    
+    
 }
