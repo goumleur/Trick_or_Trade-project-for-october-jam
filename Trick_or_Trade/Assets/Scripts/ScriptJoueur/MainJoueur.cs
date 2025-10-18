@@ -10,9 +10,33 @@ public class main_joueur : Mains
     //private List<GameObject> cartesDisponibles = new List<GameObject>(); 
     void Start()
     {
-        InitialiserDeck();
+        // If the menu saved a selected deck CSV, use it. Otherwise use default preset.
+        if (PlayerPrefs.HasKey("SelectedDeckCsv"))
+        {
+            string csv = PlayerPrefs.GetString("SelectedDeckCsv");
+            if (!string.IsNullOrEmpty(csv))
+            {
+                var parts = csv.Split('|');
+                var list = new System.Collections.Generic.List<string>(parts);
+                DeckInitializer.PopulateDeckFromNames(list, "Deck");
+                Debug.Log("Deck initialized from menu selection.");
+            }
+            else
+            {
+                InitialiserDeck();
+                Debug.Log("Deck initialisé (preset 20 cards).");
+            }
+
+            // clear the saved selection so future runs don't reuse it unexpectedly
+            PlayerPrefs.DeleteKey("SelectedDeckCsv");
+        }
+        else
+        {
+            InitialiserDeck();
+            Debug.Log("Deck initialisé (preset 20 cards).");
+        }
+
         GameObject.Find("Deck").GetComponent<deck_joueur>().melanger_deck();
-        Debug.Log("Deck initialisé (preset 20 cards).");
         // Draw the opening hand after deck is ready
         Invoke("PigerMainDeDepart", 0.01f);
     }
@@ -78,11 +102,24 @@ public class main_joueur : Mains
 
         for (int i = 0; i < 8; i++)
         {
+            // If cartesDisponibles is empty (e.g., deck was populated via DeckInitializer but list wasn't set),
+            // repopulate it from Deck children so drawing can proceed.
+            if (cartesDisponibles.Count == 0)
+            {
+                var deck = GameObject.Find("Deck");
+                if (deck != null)
+                {
+                    for (int d = 0; d < deck.transform.childCount; d++) cartesDisponibles.Add(deck.transform.GetChild(d).gameObject);
+                    Debug.Log("PigerMainDeDepart: cartesDisponibles was empty, repopulated from Deck children.");
+                }
+            }
+
             if (cartesDisponibles.Count == 0)
             {
                 Debug.LogWarning("Le deck est vide !");
                 return;
             }
+
             GameObject carte = GameObject.Find("Deck").transform.GetChild(0).gameObject;
             cartesDisponibles.Remove(carte); // Enleve dans la list
             cartesMain.Add(carte);

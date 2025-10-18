@@ -7,7 +7,7 @@ public class TurnManager : MonoBehaviour
     public static TurnManager Instance { get; private set; }
 
     [Tooltip("Number of cards playable per turn for each side")]
-    public int playsPerTurn = 3;
+    public int playsPerTurn = 1;
 
     public bool IsPlayerTurn { get; private set; } = true;
     int playsLeft = 0;
