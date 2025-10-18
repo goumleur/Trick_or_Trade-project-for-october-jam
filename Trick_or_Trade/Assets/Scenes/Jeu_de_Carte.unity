@@ -6191,7 +6191,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 993856665}
         m_TargetAssemblyTypeName: deck_joueur, Assembly-CSharp
-        m_MethodName: test
+        m_MethodName: GetDeckCard
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
