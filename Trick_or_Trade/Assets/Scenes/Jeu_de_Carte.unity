@@ -3149,21 +3149,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5768469276fdf5f4592dcb99bffb311f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  main: {fileID: 0}
-  discardPile: {fileID: 0}
-  deck: {fileID: 0}
-  mainAdvairsaire: {fileID: 0}
-  discardPileAdvairsaire: {fileID: 0}
-  deckAdvairsaire: {fileID: 0}
-  nom_Carte: Carte Inconnue
-  description_Carte: Aucune description
-  backRound: {fileID: 0}
-  illustration: {fileID: 0}
-  discarded: 0
-  typeCard: 
-  advairsaire: 
-  clone: {fileID: 0}
-  oldOrderInLayer: 0
 --- !u!1001 &765880374
 PrefabInstance:
   m_ObjectHideFlags: 0

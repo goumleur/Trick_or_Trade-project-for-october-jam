@@ -26,16 +26,30 @@ public class MainAi : Mains
     void InitialiserDeck()
     {
         cartesDisponibles.Clear();
-        for (int i = 0; i < 40; i++)
+
+        var preset = new List<string> {
+            "Candy", "ToxicSpike", "PropShield", "PropBow", "LuckyFind", "FreshStart", "Fantastical_Reclaimation",
+            "Blathan_theft", "Incinerate", "LightEmUp", "ScrabbledNote", "FaithlessAnnihilation", "Blade_Of_Nightmare",
+            "TheOlSwitcheroo", "WatchTheWorldBurn", "GenerousDonation", "SpiderFromNowhere", "Spill", "Recycle", "CherryPick"
+        };
+
+        Transform parent = GameObject.Find("DeckIA").transform;
+        for (int i = 0; i < preset.Count; i++)
         {
-            GameObject carteModel = GameObject.Find(GameObject.Find("Memoire").GetComponent<InitierDeck>().Deck1(i)); // Trouver le model de carte
-            Transform parent = GameObject.Find("DeckIA").transform; // Trouver le deck pour le futur enfant
-            GameObject carteClone = Instantiate(carteModel, parent, true); // cloner le model & set le parent de la carte (a deck)
-            carteClone.name = (i + 40).ToString(); // Set le nom au numéro de génération
-            cartesDisponibles.Add(carteClone); // Ajouter la carte dans la liste
-            carteClone.tag = "Untagged";
+            string name = preset[i];
+            GameObject model = GameObject.Find(name);
+            if (model == null)
+            {
+                model = GameObject.Find("Candy");
+            }
+            if (model == null) continue; // nothing to instantiate
+
+            GameObject clone = Instantiate(model, parent, true);
+            clone.name = (i + 40).ToString();
+            clone.tag = "Untagged";
+            cartesDisponibles.Add(clone);
         }
-        Debug.Log("Deck initialisé avec " + cartesDisponibles.Count + " cartes.");
+        Debug.Log("Deck IA initialisé avec " + cartesDisponibles.Count + " cartes.");
         gameObject.GetComponent<MainAi>().spriteChanger();
     }
     override public void modifierCarte(Transform carteAModifier, GameObject carteResultant)

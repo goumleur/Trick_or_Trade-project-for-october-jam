@@ -12,24 +12,39 @@ public class main_joueur : Mains
     {
         InitialiserDeck();
         GameObject.Find("Deck").GetComponent<deck_joueur>().melanger_deck();
+        Debug.Log("Deck initialisé (preset 20 cards).");
+        // Draw the opening hand after deck is ready
         Invoke("PigerMainDeDepart", 0.01f);
     }
 
-    //  Remplit le deck avec toutes les cartes possibles
+    // Initialize the player's deck with a preset of 20 card prefabs (fallback to 'Candy')
     void InitialiserDeck()
     {
-        for (int i = 0; i < 39; i++)
-        {
-            GameObject carteModel = GameObject.Find(GameObject.Find("Memoire").GetComponent<InitierDeck>().Deck1(i)); // Trouver le model de carte
-            Transform parent = GameObject.Find("Deck").transform; // Trouver le deck pour le futur enfant
-            GameObject carteClone = Instantiate(carteModel, parent, true); // cloner le model & set le parent de la carte (a deck)
-            carteClone.name = i.ToString(); // Set le nom au numéro de génération
-            cartesDisponibles.Add(carteClone); // Ajouter la carte dans la liste
-            carteClone.tag = "Untagged";
-        }
-        Debug.Log("Deck initialisé avec " + cartesDisponibles.Count + " cartes.");
-    }
+        cartesDisponibles.Clear();
 
+        var preset = new List<string> {
+            "Candy", "ToxicSpike", "PropShield", "PropBow", "LuckyFind", "FreshStart", "Fantastical_Reclaimation",
+            "Blathan_theft", "Incinerate", "LightEmUp", "ScrabbledNote", "FaithlessAnnihilation", "Blade_Of_Nightmare",
+            "TheOlSwitcheroo", "WatchTheWorldBurn", "GenerousDonation", "SpiderFromNowhere", "Spill", "Recycle", "CherryPick"
+        };
+
+        Transform parent = GameObject.Find("Deck").transform;
+        for (int i = 0; i < preset.Count; i++)
+        {
+            string name = preset[i];
+            GameObject model = GameObject.Find(name);
+            if (model == null)
+            {
+                model = GameObject.Find("Candy");
+            }
+            if (model == null) continue; // nothing to instantiate
+
+            GameObject clone = Instantiate(model, parent, true);
+            clone.name = (i).ToString();
+            clone.tag = "Untagged";
+            cartesDisponibles.Add(clone);
+        }
+    }
     override public void modifierCarte(Transform carteAModifier, GameObject carteResultant)
     {
         GameObject carteModel = carteResultant; // Trouver le model de carte
