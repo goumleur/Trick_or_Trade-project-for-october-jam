@@ -156,7 +156,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -290, y: -190}
+  m_AnchoredPosition: {x: -0.000030518, y: -139.2}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &213418117
@@ -344,7 +344,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Start
+  m_text: Start !!!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a76cf168feca2884fb555efac006567b, type: 2}
   m_sharedMaterial: {fileID: 5081318532872202415, guid: a76cf168feca2884fb555efac006567b, type: 2}
@@ -559,7 +559,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Setting
+  m_text: Settings
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a76cf168feca2884fb555efac006567b, type: 2}
   m_sharedMaterial: {fileID: 5081318532872202415, guid: a76cf168feca2884fb555efac006567b, type: 2}
@@ -674,7 +674,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -190}
+  m_AnchoredPosition: {x: 0, y: -91.4}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &901985424
@@ -1304,7 +1304,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 290, y: -190}
+  m_AnchoredPosition: {x: 0, y: -190}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2085272382
@@ -1598,8 +1598,8 @@ Transform:
   m_GameObject: {fileID: 2111015388}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.1421, y: -0.185, z: 0}
-  m_LocalScale: {x: 0.5809666, y: 0.5809666, z: 0.5809666}
+  m_LocalPosition: {x: 0.0009, y: 0.0018, z: 0}
+  m_LocalScale: {x: 0.5550142, y: 0.5550142, z: 0.5550142}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
